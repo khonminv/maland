@@ -1,0 +1,27 @@
+[
+  {
+    "id": "slash",
+    "name": "Slash",
+    "description": "근접 무기로 베기 공격",
+    "maxLevel": 10,
+    "jobTier": 1
+  },
+  {
+    "id": "shieldBlock",
+    "name": "Shield Block",
+    "description": "방패로 공격 막기",
+    "maxLevel": 5,
+    "jobTier": 2,
+    "prerequisite": {
+      "skillId": "slash",
+      "minLevel": 5
+    }
+  },
+  {
+    "id": "powerStrike",
+    "name": "Power Strike",
+    "description": "강력한 일격을 가한다",
+    "maxLevel": 10,
+    "jobTier": 3
+  }
+]
