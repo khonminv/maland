@@ -42,7 +42,7 @@ export default function NewTradePage() {
 
   useEffect(() => {
     axios
-      .get("/api/auth/session") // 실제 유저 정보를 반환하는 API 경로로 수정하세요
+      .get(`${process.env.NEXT_PUBLIC_API_BASE}/auth`) // 실제 유저 정보를 반환하는 API 경로로 수정하세요
       .then((res) => setUser(res.data.user))
       .catch((err) => console.error("유저 정보 불러오기 실패", err));
   }, []);
