@@ -12,18 +12,25 @@ export interface UserProfile {
 export function useAuth() {
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<UserProfile | null>(null);
+  const [isLoading, setIsLoading] = useState(true); // 추가
 
   useEffect(() => {
     const savedToken = localStorage.getItem("authToken");
     if (savedToken) {
       setToken(savedToken);
       fetchUserProfile(savedToken)
-        .then((profile: UserProfile) => setUser(profile))
+        .then((profile: UserProfile) => {
+          setUser(profile);
+          setIsLoading(false);
+        })
         .catch(() => {
           localStorage.removeItem("authToken");
           setToken(null);
           setUser(null);
+          setIsLoading(false);
         });
+    } else {
+      setIsLoading(false);
     }
   }, []);
 
@@ -33,5 +40,5 @@ export function useAuth() {
     setUser(null);
   };
 
-  return { token, user, logout };
+  return { token, user, logout, isLoading };
 }
