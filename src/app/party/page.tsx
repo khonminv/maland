@@ -18,7 +18,7 @@ const mapData: Record<string, string[]> = {
   빅토리아: ["헤네시스 사냥터", "던전 입구", "골렘 사원"],
 };
 
-const positionOptions = [
+const positionOptions: string[] = [
   "좌1", "좌2", "좌3", "좌4", "좌5",
   "우1", "우2", "우3", "우4", "우5",
   "1층", "2층", "3층", "4층", "5층", "6층",
