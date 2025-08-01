@@ -4,9 +4,8 @@ import { useAuth } from "@/app/hook/useAuth";
 import DiscordLoginButton from "../Discordlogin";
 
 export default function Nav() {
-  const { token, user, logout, isLoading } = useAuth();
+  const { token, user, logout } = useAuth();
 
-  if (isLoading) return null; // 또는 로딩 스피너
 
   return (
     <nav className="flex items-center justify-between p-4 bg-gray-800 text-white">

@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { fetchUserProfile } from "@/app/lib/api";
 
-// 백엔드에서 받아올 유저 정보 타입 정의
 export interface UserProfile {
   discordId: string;
   username?: string;
@@ -10,29 +9,23 @@ export interface UserProfile {
 }
 
 export function useAuth() {
-  const [token, setToken] = useState<string | null>(null);
+  // 초기값을 바로 로컬스토리지에서 읽음
+  const [token, setToken] = useState<string | null>(() => localStorage.getItem("authToken"));
   const [user, setUser] = useState<UserProfile | null>(null);
-  const [isLoading, setIsLoading] = useState(true); // 추가
 
   useEffect(() => {
-    const savedToken = localStorage.getItem("authToken");
-    if (savedToken) {
-      setToken(savedToken);
-      fetchUserProfile(savedToken)
-        .then((profile: UserProfile) => {
-          setUser(profile);
-          setIsLoading(false);
-        })
+    if (token) {
+      fetchUserProfile(token)
+        .then((profile: UserProfile) => setUser(profile))
         .catch(() => {
           localStorage.removeItem("authToken");
           setToken(null);
           setUser(null);
-          setIsLoading(false);
         });
     } else {
-      setIsLoading(false);
+      setUser(null);
     }
-  }, []);
+  }, [token]);
 
   const logout = () => {
     localStorage.removeItem("authToken");
@@ -40,5 +33,5 @@ export function useAuth() {
     setUser(null);
   };
 
-  return { token, user, logout, isLoading };
+  return { token, user, logout, setToken };
 }
