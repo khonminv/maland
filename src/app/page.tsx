@@ -16,17 +16,17 @@ export default function HomePage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl">
         <FeatureCard
           title="스킬트리 시뮬레이터"
-          desc="직업을 선택하고 자유롭게 스킬을 배치해보세요."
+          desc=""
           href="/skill-simulator"
         />
         <FeatureCard
           title="자리 거래"
-          desc="자리를 사고팔 수 있어요. 디스코드 연동으로 사기도 예방해요."
+          desc=""
           href="/trade"
         />
         <FeatureCard
           title="파티 모집"
-          desc="보스, 사냥, 이벤트 파티원들을 쉽게 모집하세요."
+          desc=""
           href="/party"
         />
       </div>
