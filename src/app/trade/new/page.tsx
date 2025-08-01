@@ -15,7 +15,6 @@ interface User {
   avatar?: string;
 }
 
-const [user, setUser] = useState<User | null>(null);
 
 
 interface AvgPrice {
@@ -29,6 +28,7 @@ interface AvgPrice {
 
 export default function NewTradePage() {
   const router = useRouter();
+  const [user, setUser] = useState<User | null>(null);
 
   const [form, setForm] = useState({
     type: "삽니다",
