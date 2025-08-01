@@ -8,25 +8,32 @@ export default function Nav() {
 
   function getAvatarUrl(user: { discordId: string; avatar?: string }) {
     if (!user.avatar) {
-      return "/default-avatar.png"; // 기본 이미지
+      return "/images/discord.png"; // 기본 이미지
     }
-    return `https://cdn.discordapp.com/avatars/${user.discordId}/${user.avatar}.png`;
+    const isGif = user.avatar.startsWith("a_");
+    const ext = isGif ? "gif" : "png";
+    return `https://cdn.discordapp.com/avatars/${user.discordId}/${user.avatar}.${ext}`;
   }
 
   return (
     <nav className="flex items-center justify-between p-4 bg-gray-800 text-white">
       <div>
         {token && user ? (
-          <>
-            <img src={getAvatarUrl(user)} alt={`${user.username} 프로필`} className="rounded-full w-8 h-8" />
-            <span className="mr-4">{user.username}</span>
+          <div className="flex items-center gap-3">
+            <img
+              src={getAvatarUrl(user)}
+              alt={`${user.username} 프로필`}
+              className="rounded-full w-8 h-8"
+              loading="lazy"
+            />
+            <span>{user.username}님</span>
             <button
               onClick={logout}
               className="bg-red-600 px-3 py-1 rounded hover:bg-red-700"
             >
               로그아웃
             </button>
-          </>
+          </div>
         ) : (
           <DiscordLoginButton />
         )}
