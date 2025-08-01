@@ -34,7 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </main>
 
           <footer className="mt-auto border-t border-yellow-400 text-center text-sm text-yellow-300 py-4 select-none">
-            © 2025 MapleLand. All rights reserved.
+            © 2025 MapleLand All
           </footer>
         </AuthProvider>
       </body>

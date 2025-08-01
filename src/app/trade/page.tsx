@@ -180,7 +180,7 @@ export default function TradePage() {
               + 새 글 등록
             </Link>
           ) : (
-            <p className="text-sm text-gray-400">로그인하면 글을 작성할 수 있습니다.</p>
+            <p className="text-sm text-gray-400">로그인하면 거래 등록을 할 수 있습니다.</p>
           )}
         </div>
       </div>

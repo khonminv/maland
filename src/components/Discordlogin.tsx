@@ -9,7 +9,7 @@ console.log("REDIRECT_URI:", process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI);
       href={discordLoginUrl}
       className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md font-bold"
     >
-      디스코드로 로그인
+      Discord 로그인
     </a>
   );
 }

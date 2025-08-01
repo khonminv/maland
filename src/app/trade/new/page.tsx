@@ -9,6 +9,15 @@ const subMapsByMap: Record<string, string[]> = {
   빅토리아: ["빅토리아 서브맵1", "빅토리아 서브맵2"],
 };
 
+interface User {
+  id: string;
+  username: string;
+  avatar?: string;
+}
+
+const [user, setUser] = useState<User | null>(null);
+
+
 interface AvgPrice {
   _id: {
     mapName: string;
@@ -30,6 +39,14 @@ export default function NewTradePage() {
   });
 
   const [avgPrices, setAvgPrices] = useState<AvgPrice[]>([]);
+
+  useEffect(() => {
+    axios
+      .get("/api/auth/session") // 실제 유저 정보를 반환하는 API 경로로 수정하세요
+      .then((res) => setUser(res.data.user))
+      .catch((err) => console.error("유저 정보 불러오기 실패", err));
+  }, []);
+
 
   // mapName 변경 시 서브맵 자동 변경
   useEffect(() => {
@@ -55,28 +72,29 @@ export default function NewTradePage() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    
+  e.preventDefault();
 
-    try {
-      const payload = {
-        ...form,
-         price: Number(form.price),
-        userId: "test-user-id",
-      };
+  if (!user) {
+    alert("로그인이 필요합니다.");
+    return;
+  }
 
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE}/trades`,
-        payload
-      );
-      router.push("/trade");
-    } catch (err) {
-      console.error(err);
-      alert("글 등록 실패");
-    }
-    
-  };
+  try {
+    const payload = {
+      ...form,
+      price: Number(form.price),
+      userId: user.id,
+      username: user.username,
+      avatar: user.avatar, // 선택적으로 저장
+    };
+
+    await axios.post(`${process.env.NEXT_PUBLIC_API_BASE}/trades`, payload);
+    router.push("/trade");
+  } catch (err) {
+    console.error(err);
+    alert("글 등록 실패");
+  }
+};
 
   // 현재 선택된 mapName의 서브맵별 평균 가격 필터링
   const filteredAvgPrices = avgPrices.filter((ap) => ap._id.mapName === form.mapName);
