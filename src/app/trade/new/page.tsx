@@ -41,6 +41,11 @@ export default function NewTradePage() {
   const [avgPrices, setAvgPrices] = useState<AvgPrice[]>([]);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.log("토큰이 없음");
+      return;
+    }
     axios
       .get(`${process.env.NEXT_PUBLIC_API_BASE}/auth/me`) // 실제 유저 정보를 반환하는 API 경로로 수정하세요
       .then((res) => setUser(res.data.user))
