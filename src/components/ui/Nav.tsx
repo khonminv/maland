@@ -1,10 +1,11 @@
 "use client";
 import React from "react";
-import { useAuth } from "@/app/hook/useAuth";
+import { useAuth } from "@/app/context/AuthContext";
 import DiscordLoginButton from "../Discordlogin";
 
 export default function Nav() {
   const { token, user, logout } = useAuth();
+
 
 
   return (
