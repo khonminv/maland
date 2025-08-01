@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
+import { useAuth } from "@/app/context/AuthContext";
 
 interface Trade {
   _id: string;
@@ -13,6 +14,11 @@ interface Trade {
   description: string;
   status: string;
   isCompleted: boolean;
+  author?: {
+    username: string;
+    discordId: string;
+    avatar?: string;
+  };
 }
 
 interface AvgPrice {
@@ -32,13 +38,13 @@ const subMapsByMap: Record<string, string[]> = {
 };
 
 export default function TradePage() {
+  const { user } = useAuth();
   const [trades, setTrades] = useState<Trade[]>([]);
   const [filtered, setFiltered] = useState<Trade[]>([]);
   const [mapFilter, setMapFilter] = useState("");
   const [subMapFilter, setSubMapFilter] = useState("");
   const [avgPrices, setAvgPrices] = useState<AvgPrice[]>([]);
   const [showCompleted, setShowCompleted] = useState(false);
-
 
   useEffect(() => {
     fetchTrades();
@@ -64,23 +70,22 @@ export default function TradePage() {
   };
 
   useEffect(() => {
-  let result = trades;
+    let result = trades;
 
-  if (mapFilter) {
-    result = result.filter((item) => item.mapName === mapFilter);
-  }
+    if (mapFilter) {
+      result = result.filter((item) => item.mapName === mapFilter);
+    }
 
-  if (subMapFilter) {
-    result = result.filter((item) => item.subMap === subMapFilter);
-  }
+    if (subMapFilter) {
+      result = result.filter((item) => item.subMap === subMapFilter);
+    }
 
-  if (!showCompleted) {
-    result = result.filter((item) => item.status !== "거래완료");
-  }
+    if (!showCompleted) {
+      result = result.filter((item) => item.status !== "거래완료");
+    }
 
-  setFiltered(result);
-}, [mapFilter, subMapFilter, trades, showCompleted]);
-
+    setFiltered(result);
+  }, [mapFilter, subMapFilter, trades, showCompleted]);
 
   const toggleStatus = async (id: string, currentStatus?: string) => {
     try {
@@ -120,7 +125,6 @@ export default function TradePage() {
         거래 게시판
       </h1>
 
-      {/* 맵 필터 */}
       <div className="flex flex-wrap gap-3 justify-center mb-6">
         {maps.map((m) => (
           <button
@@ -140,7 +144,6 @@ export default function TradePage() {
         ))}
       </div>
 
-      {/* 서브맵 필터 */}
       {mapFilter && (
         <div className="mb-10 text-center">
           <select
@@ -158,8 +161,6 @@ export default function TradePage() {
         </div>
       )}
 
-      
-
       <div className="flex gap-6 items-center justify-center mb-6">
         <div className=" text-center">
           <button
@@ -170,19 +171,20 @@ export default function TradePage() {
           </button>
         </div>
 
-        {/* 등록 버튼 */}
         <div className="text-center ">
-          <Link
-            href="/trade/new"
-            className="inline-block px-5 py-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-600 text-white font-semibold shadow-lg hover:scale-105 transition-transform"
-          >
-            + 새 글 등록
-          </Link>
+          {user ? (
+            <Link
+              href="/trade/new"
+              className="inline-block px-5 py-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-600 text-white font-semibold shadow-lg hover:scale-105 transition-transform"
+            >
+              + 새 글 등록
+            </Link>
+          ) : (
+            <p className="text-sm text-gray-400">로그인하면 글을 작성할 수 있습니다.</p>
+          )}
         </div>
       </div>
-     
 
-      {/* 평균 거래가 */}
       {mapFilter && subMapFilter ? (
         <section className="mb-12 bg-white rounded-xl shadow-lg p-6">
           <h2 className="text-xl font-semibold mb-4 border-b border-purple-300 pb-2">
@@ -209,96 +211,51 @@ export default function TradePage() {
         <p className="text-center text-gray-400 mb-12">서브맵을 선택해야 평균 가격을 볼 수 있습니다.</p>
       )}
 
-      {/* 거래 목록 */}
       <div className="flex flex-col md:flex-row gap-8">
-        {/* 삽니다 */}
-        <TradeList
-          title="🛒 삽니다"
-          trades={filtered.filter((t) => t.type === "삽니다")}
-          toggleStatus={toggleStatus}
-          deleteTrade={deleteTrade}
-        />
-
-        {/* 팝니다 */}
-        <TradeList
-          title="📦 팝니다"
-          trades={filtered.filter((t) => t.type === "팝니다")}
-          toggleStatus={toggleStatus}
-          deleteTrade={deleteTrade}
-        />
+        <TradeList title="🛒 삽니다" trades={filtered.filter((t) => t.type === "삽니다")} toggleStatus={toggleStatus} deleteTrade={deleteTrade} />
+        <TradeList title="📦 팝니다" trades={filtered.filter((t) => t.type === "팝니다")} toggleStatus={toggleStatus} deleteTrade={deleteTrade} />
       </div>
     </div>
   );
 }
 
-function TradeList({
-  title,
-  trades,
-  toggleStatus,
-  deleteTrade,
-}: {
-  title: string;
-  trades: Trade[];
-  toggleStatus: (id: string, status?: string) => void;
-  deleteTrade: (id: string) => void;
-}) {
+function TradeList({ title, trades, toggleStatus, deleteTrade }: { title: string; trades: Trade[]; toggleStatus: (id: string, status?: string) => void; deleteTrade: (id: string) => void }) {
   return (
     <section className="w-full md:w-1/2 bg-white rounded-2xl shadow-xl p-6 flex flex-col">
-      <h2
-        className={`text-2xl font-bold mb-6 border-b-4 pb-3 ${
-          title.includes("삽니다") ? "border-green-500 text-green-600" : "border-red-500 text-red-600"
-        }`}
-      >
+      <h2 className={`text-2xl font-bold mb-6 border-b-4 pb-3 ${title.includes("삽니다") ? "border-green-500 text-green-600" : "border-red-500 text-red-600"}`}>
         {title}
       </h2>
-
       {trades.length > 0 ? (
         <ul className="space-y-5 overflow-y-auto max-h-[600px] pr-2">
           {trades.map((item) => (
-            <li
-              key={item._id}
-              className={`p-5 rounded-xl shadow-md transition-colors duration-300 ${
-                item.status === "거래완료"
-                  ? "bg-gray-100 text-gray-500 line-through"
-                  : "bg-gradient-to-r from-purple-50 via-pink-50 to-yellow-50"
-              }`}
-            >
+            <li key={item._id} className={`p-5 rounded-xl shadow-md transition-colors duration-300 ${item.status === "거래완료" ? "bg-gray-100 text-gray-500 line-through" : "bg-gradient-to-r from-purple-50 via-pink-50 to-yellow-50"}`}>
               <div className="flex justify-between items-center text-sm font-medium text-gray-600 mb-1">
                 <span>{item.mapName}</span>
                 <span>·</span>
                 <span>{item.subMap}</span>
                 <span>· 상태:</span>
-                <span
-                  className={`font-semibold ${
-                    item.status === "거래완료" ? "text-gray-400" : "text-purple-700"
-                  }`}
-                >
-                  {item.status}
-                </span>
+                <span className={`font-semibold ${item.status === "거래완료" ? "text-gray-400" : "text-purple-700"}`}>{item.status}</span>
               </div>
-
               <h3 className="text-lg font-semibold text-gray-900 mb-2">{item.title}</h3>
+              {item.author && (
+                <div className="flex items-center gap-2 mb-2">
+                  <img
+                    src={`https://cdn.discordapp.com/avatars/${item.author.discordId}/${item.author.avatar}.png`}
+                    alt={`${item.author.username} 프로필`}
+                    className="w-6 h-6 rounded-full"
+                    onError={(e) => (e.currentTarget.src = "/default-avatar.png")}
+                  />
+                  <span className="text-sm text-gray-500">{item.author.username}</span>
+                </div>
+              )}
               <p className="text-gray-700 mb-4 whitespace-pre-wrap">{item.description}</p>
-
               <div className="flex justify-between items-center">
-                <span className="text-indigo-600 font-extrabold text-xl">
-                  {item.price.toLocaleString()} 메소
-                </span>
+                <span className="text-indigo-600 font-extrabold text-xl">{item.price.toLocaleString()} 메소</span>
                 <div className="flex gap-3">
-                  <button
-                    onClick={() => toggleStatus(item._id, item.status)}
-                    className={`px-4 py-2 rounded-lg font-semibold transition-colors duration-300 ${
-                      item.status === "거래완료"
-                        ? "bg-gray-400 hover:bg-gray-500"
-                        : "bg-purple-600 hover:bg-purple-700 text-white"
-                    }`}
-                  >
+                  <button onClick={() => toggleStatus(item._id, item.status)} className={`px-4 py-2 rounded-lg font-semibold transition-colors duration-300 ${item.status === "거래완료" ? "bg-gray-400 hover:bg-gray-500" : "bg-purple-600 hover:bg-purple-700 text-white"}`}>
                     {item.status === "거래완료" ? "거래 취소" : "거래 완료"}
                   </button>
-                  <button
-                    onClick={() => deleteTrade(item._id)}
-                    className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-semibold transition-colors duration-300"
-                  >
+                  <button onClick={() => deleteTrade(item._id)} className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-semibold transition-colors duration-300">
                     삭제
                   </button>
                 </div>
