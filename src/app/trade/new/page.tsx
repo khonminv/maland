@@ -41,7 +41,7 @@ export default function NewTradePage() {
   const [avgPrices, setAvgPrices] = useState<AvgPrice[]>([]);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("Authtoken");
     if (!token) {
       console.log("토큰이 없음");
       return;
