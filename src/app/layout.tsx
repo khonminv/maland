@@ -22,7 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 className="text-3xl font-extrabold text-yellow-400 tracking-wide hover:text-yellow-300 transition duration-300 select-none"
                 aria-label="메이플랜드 홈으로 이동"
               >
-                🌟 MapleLand
+                🌟 MapleLand All
               </Link>
 
               <Nav />
