@@ -1,9 +1,31 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 export default function HomePage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
+
+    if (token) {
+      localStorage.setItem("authToken", token);
+
+      // 토큰 쿼리 제거하고 URL 새로 고침 없이 주소만 바꿈
+      urlParams.delete("token");
+      const newUrl =
+        window.location.origin + window.location.pathname +
+        (urlParams.toString() ? `?${urlParams.toString()}` : "");
+      window.history.replaceState({}, "", newUrl);
+
+      // 필요하면 추가 동작 가능 (예: 유저 데이터 갱신 등)
+    }
+  }, []);
+
   return (
     <div className="flex flex-col items-center text-center space-y-12 mt-12 px-4">
       <h1 className="text-4xl md:text-5xl font-bold text-yellow-300 drop-shadow">
@@ -30,12 +52,6 @@ export default function HomePage() {
           href="/party"
         />
       </div>
-
-      {/* <Link href="/skill-simulator">
-        <Button className="bg-yellow-400 hover:bg-yellow-300 text-black text-lg px-6 py-3 rounded-xl shadow-lg">
-          지금 시작하기 →
-        </Button>
-      </Link> */}
     </div>
   );
 }
