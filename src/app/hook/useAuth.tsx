@@ -9,9 +9,15 @@ export interface UserProfile {
 }
 
 export function useAuth() {
-  // 초기값을 바로 로컬스토리지에서 읽음
-  const [token, setToken] = useState<string | null>(() => localStorage.getItem("authToken"));
+  const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<UserProfile | null>(null);
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem("authToken");
+    if (storedToken) {
+      setToken(storedToken);
+    }
+  }, []);
 
   useEffect(() => {
     if (token) {
