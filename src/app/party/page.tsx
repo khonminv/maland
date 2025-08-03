@@ -45,7 +45,7 @@ export default function PartyListPage() {
     setError("");
     try {
       // TODO: 실제 API 주소로 변경 필요
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE}/party`);
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE}/party`,{withCredentials: true});
       setPartyPosts(res.data);
     } catch (e) {
       setError("파티 모집글 불러오기에 실패했습니다.");
