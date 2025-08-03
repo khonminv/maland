@@ -243,7 +243,7 @@ function TradeList({ title, trades, toggleStatus, deleteTrade }: { title: string
                     src={`https://cdn.discordapp.com/avatars/${item.author.discordId}/${item.author.avatar}.png`}
                     alt={`${item.author.username} 프로필`}
                     className="w-6 h-6 rounded-full"
-                    onError={(e) => (e.currentTarget.src = "/default-avatar.png")}
+                    onError={(e) => (e.currentTarget.src = "/images/discord.png")}
                   />
                   <span className="text-sm text-gray-500">{item.author.username}</span>
                 </div>
