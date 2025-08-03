@@ -113,6 +113,22 @@ export default function TradePage() {
     }
   };
 
+  const handleReserve = async (tradeId: string) => {
+    if (!user) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+    try {
+      await axios.post(`${process.env.NEXT_PUBLIC_API_BASE}/trades/${tradeId}/reserve`);
+      alert("거래 신청 완료!");
+      fetchTrades(); // 최신 상태 불러오기
+      fetchAvgPrices();
+    } catch (error: any) {
+      console.error(error);
+      alert(error.response?.data?.error || "거래 신청에 실패했습니다.");
+    }
+  };
+
   const currentSubMaps = mapFilter ? subMapsByMap[mapFilter] || [] : [];
 
   const filteredAvgPrices =
@@ -213,14 +229,14 @@ export default function TradePage() {
       )}
 
       <div className="flex flex-col md:flex-row gap-8">
-        <TradeList title="🛒 삽니다" trades={filtered.filter((t) => t.type === "삽니다")} toggleStatus={toggleStatus} deleteTrade={deleteTrade} />
-        <TradeList title="📦 팝니다" trades={filtered.filter((t) => t.type === "팝니다")} toggleStatus={toggleStatus} deleteTrade={deleteTrade} />
+        <TradeList title="🛒 삽니다" trades={filtered.filter((t) => t.type === "삽니다")} toggleStatus={toggleStatus} deleteTrade={deleteTrade} onReserve={handleReserve}/>
+        <TradeList title="📦 팝니다" trades={filtered.filter((t) => t.type === "팝니다")} toggleStatus={toggleStatus} deleteTrade={deleteTrade} onReserve={handleReserve}/>
       </div>
     </div>
   );
 }
 
-function TradeList({ title, trades, toggleStatus, deleteTrade }: { title: string; trades: Trade[]; toggleStatus: (id: string, status?: string) => void; deleteTrade: (id: string) => void }) {
+function TradeList({ title, trades, toggleStatus, deleteTrade, onReserve }: { title: string; trades: Trade[]; toggleStatus: (id: string, status?: string) => void; deleteTrade: (id: string) => void;  onReserve: (id: string) => void;}) {
   return (
     <section className="w-full md:w-1/2 bg-white rounded-2xl shadow-xl p-6 flex flex-col">
       <h2 className={`text-2xl font-bold mb-6 border-b-4 pb-3 ${title.includes("삽니다") ? "border-green-500 text-green-600" : "border-red-500 text-red-600"}`}>
@@ -253,10 +269,26 @@ function TradeList({ title, trades, toggleStatus, deleteTrade }: { title: string
               <div className="flex justify-between items-center">
                 <span className="text-indigo-600 font-extrabold text-xl">{item.price.toLocaleString()} 메소</span>
                 <div className="flex gap-3">
-                  <button onClick={() => toggleStatus(item._id, item.status)} className={`px-4 py-2 rounded-lg font-semibold transition-colors duration-300 ${item.status === "거래완료" ? "bg-gray-400 hover:bg-gray-500" : "bg-purple-600 hover:bg-purple-700 text-white"}`}>
+                  <button 
+                    onClick={() => toggleStatus(item._id, item.status)} 
+                    className={`px-4 py-2 rounded-lg font-semibold transition-colors duration-300 ${item.status === "거래완료" ? "bg-gray-400 hover:bg-gray-500" : "bg-purple-600 hover:bg-purple-700 text-white"}`}
+                  >
                     {item.status === "거래완료" ? "거래 취소" : "거래 완료"}
                   </button>
-                  <button onClick={() => deleteTrade(item._id)} className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-semibold transition-colors duration-300">
+                  
+                  {/* 거래 신청 버튼: 상태가 "거래가능"일 때만 활성화 */}
+                  {item.status === "거래가능" && (
+                    <button onClick={() => onReserve(item._id)}
+                      className="px-4 py-2 rounded-lg bg-yellow-500 hover:bg-yellow-600 text-white font-semibold transition-colors duration-300"
+                    >
+                      거래 신청
+                    </button>
+                  )}
+
+                  <button 
+                    onClick={() => deleteTrade(item._id)} 
+                    className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-semibold transition-colors duration-300"
+                  >
                     삭제
                   </button>
                 </div>
