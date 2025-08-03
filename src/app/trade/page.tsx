@@ -54,6 +54,7 @@ export default function TradePage() {
   const fetchTrades = async () => {
     try {
       const res = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE}/trades`);
+       console.log("🔥 프론트에서 받은 trades:", res.data);
       setTrades(res.data);
     } catch (error) {
       console.error(error);
