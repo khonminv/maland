@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
 import { useAuth } from "@/app/context/AuthContext";
+import type { AxiosError } from "axios";
 
 interface Trade {
   _id: string;
@@ -114,20 +115,25 @@ export default function TradePage() {
   };
 
   const handleReserve = async (tradeId: string) => {
-    if (!user) {
-      alert("로그인이 필요합니다.");
-      return;
-    }
-    try {
-      await axios.post(`${process.env.NEXT_PUBLIC_API_BASE}/trades/${tradeId}/reserve`);
-      alert("거래 신청 완료!");
-      fetchTrades(); // 최신 상태 불러오기
-      fetchAvgPrices();
-    } catch (error: any) {
-      console.error(error);
+  if (!user) {
+    alert("로그인이 필요합니다.");
+    return;
+  }
+  try {
+    await axios.post(`${process.env.NEXT_PUBLIC_API_BASE}/trades/${tradeId}/reserve`);
+    alert("거래 신청 완료!");
+    fetchTrades();
+    fetchAvgPrices();
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      // axios 에러일 경우 타입 안전하게 접근
       alert(error.response?.data?.error || "거래 신청에 실패했습니다.");
+    } else {
+      // 그 외 예상치 못한 에러 처리
+      alert("알 수 없는 에러가 발생했습니다.");
     }
-  };
+  }
+};
 
   const currentSubMaps = mapFilter ? subMapsByMap[mapFilter] || [] : [];
 
