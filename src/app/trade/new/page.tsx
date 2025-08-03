@@ -85,7 +85,7 @@ axios
     setForm({ ...form, [name]: value });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
 
   if (!user) {
@@ -93,23 +93,31 @@ axios
     return;
   }
 
+  const token = localStorage.getItem("authToken");
+  if (!token) {
+    alert("로그인 토큰이 없습니다.");
+    return;
+  }
+
   try {
     const payload = {
       ...form,
       price: Number(form.price),
-      userId: user.id,
-      username: user.username,
-      avatar: user.avatar, // 선택적으로 저장
+      // userId, username, avatar는 서버에서 미들웨어가 자동으로 넣어주기 때문에 안 넣어도 됨
     };
 
-    await axios.post(`${process.env.NEXT_PUBLIC_API_BASE}/trades`, payload);
+    await axios.post(`${process.env.NEXT_PUBLIC_API_BASE}/trades`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
     router.push("/trade");
   } catch (err) {
     console.error(err);
     alert("글 등록 실패");
   }
 };
-
   // 현재 선택된 mapName의 서브맵별 평균 가격 필터링
   const filteredAvgPrices = avgPrices.filter((ap) => ap._id.mapName === form.mapName);
 
