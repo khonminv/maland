@@ -6,6 +6,7 @@ export interface UserProfile {
   discordId: string;
   username?: string;
   avatar?: string;
+  token: string;
 }
 
 export function useAuth() {

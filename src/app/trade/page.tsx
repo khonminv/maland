@@ -120,20 +120,27 @@ export default function TradePage() {
     return;
   }
   try {
-    await axios.post(`${process.env.NEXT_PUBLIC_API_BASE}/trades/${tradeId}/reserve`);
+    await axios.post(
+      `${process.env.NEXT_PUBLIC_API_BASE}/trades/${tradeId}/reserve`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${user.token}`,  // user.token 에 실제 토큰이 있어야 함
+        },
+      }
+    );
     alert("거래 신청 완료!");
     fetchTrades();
     fetchAvgPrices();
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
-      // axios 에러일 경우 타입 안전하게 접근
       alert(error.response?.data?.error || "거래 신청에 실패했습니다.");
     } else {
-      // 그 외 예상치 못한 에러 처리
       alert("알 수 없는 에러가 발생했습니다.");
     }
   }
 };
+
 
   const currentSubMaps = mapFilter ? subMapsByMap[mapFilter] || [] : [];
 
@@ -275,12 +282,12 @@ function TradeList({ title, trades, toggleStatus, deleteTrade, onReserve }: { ti
               <div className="flex justify-between items-center">
                 <span className="text-indigo-600 font-extrabold text-xl">{item.price.toLocaleString()} 메소</span>
                 <div className="flex gap-3">
-                  <button 
+                  {/* <button 
                     onClick={() => toggleStatus(item._id, item.status)} 
                     className={`px-4 py-2 rounded-lg font-semibold transition-colors duration-300 ${item.status === "거래완료" ? "bg-gray-400 hover:bg-gray-500" : "bg-purple-600 hover:bg-purple-700 text-white"}`}
                   >
                     {item.status === "거래완료" ? "거래 취소" : "거래 완료"}
-                  </button>
+                  </button> */}
                   
                   {/* 거래 신청 버튼: 상태가 "거래가능"일 때만 활성화 */}
                   {item.status === "거래가능" && (
@@ -291,12 +298,12 @@ function TradeList({ title, trades, toggleStatus, deleteTrade, onReserve }: { ti
                     </button>
                   )}
 
-                  <button 
+                  {/* <button 
                     onClick={() => deleteTrade(item._id)} 
                     className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-semibold transition-colors duration-300"
                   >
                     삭제
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </li>
