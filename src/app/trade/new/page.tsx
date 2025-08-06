@@ -54,7 +54,6 @@ axios
     },
   })
   .then((res) => {
-    console.log("🔐 유저 정보:", res.data);
     setUser(res.data);
   })
   .catch((err) => console.error("유저 정보 불러오기 실패", err));
@@ -98,7 +97,6 @@ const handleSubmit = async (e: React.FormEvent) => {
     alert("로그인 토큰이 없습니다.");
     return;
   }
-
   try {
     const payload = {
       ...form,

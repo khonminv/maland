@@ -47,7 +47,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (token) {
       fetchUserProfile(token)
-        .then((profile) => setUser(profile))
+        .then((profile) => setUser({ ...profile, token })) // ✅ 고친 부분
         .catch(() => logout());
     } else {
       setUser(null);
