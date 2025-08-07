@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import axios from "axios";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useAuth } from "../context/AuthContext";
+import axios, { AxiosError } from "axios";
 
 interface PartyPost {
   _id: string;
@@ -137,13 +137,16 @@ export default function PartyListPage() {
     );
     alert("신청이 완료되었습니다.");
     closeApplyModal();
-  } catch (err: any) {
-    console.error(err);
-    if (err.response?.status === 400) {
+  } catch (err) {
+    const error = err as AxiosError;
+
+    if (axios.isAxiosError(error) && error.response?.status === 400) {
       alert("이미 신청한 파티입니다.");
     } else {
       alert("신청 실패. 다시 시도해주세요.");
     }
+
+    console.error(error);
   }
 };
 
