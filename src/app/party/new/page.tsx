@@ -25,10 +25,15 @@ export default function PartyForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+  const [token, setToken] = useState<string | null>(null);
 
 
-
-    const token = localStorage.getItem("authToken");
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedToken = localStorage.getItem("authToken");
+      setToken(storedToken);
+    }
+  }, []);
 
 
   const togglePosition = (pos: string) => {
