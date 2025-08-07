@@ -1,4 +1,3 @@
-// lib/api.ts
 export async function fetchUserProfile(token: string) {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/auth/me`, {
     headers: {
@@ -10,5 +9,7 @@ export async function fetchUserProfile(token: string) {
     throw new Error("유저 정보 불러오기 실패");
   }
 
-  return res.json();
+  const user = await res.json();
+   console.log("🔍 [fetchUserProfile] 받은 유저 정보:", user);
+  return user; // ✅ 바로 user 전체 객체 리턴
 }

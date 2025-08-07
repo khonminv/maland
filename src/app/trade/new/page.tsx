@@ -42,10 +42,10 @@ export default function NewTradePage() {
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
-if (!token) {
-  console.log("토큰이 없음");
-  return;
-}
+    if (!token) {
+      console.log("토큰이 없음");
+      return;
+    }
 
 axios
   .get(`${process.env.NEXT_PUBLIC_API_BASE}/auth/me`, {

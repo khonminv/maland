@@ -4,15 +4,20 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { fetchUserProfile } from "@/app/lib/api";
 
 export interface UserProfile {
+   _id: string;  
   discordId: string;
   username?: string;
   avatar?: string;
   token: string;
+  job: string;
+  level: number;
 }
 
 interface AuthContextType {
   token: string | null;
   user: UserProfile | null;
+  setUser: React.Dispatch<React.SetStateAction<UserProfile | null>>;
+
   setToken: (token: string | null) => void;
   logout: () => void;
 }
@@ -47,15 +52,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (token) {
       fetchUserProfile(token)
-        .then((profile) => setUser({ ...profile, token })) // ✅ 고친 부분
-        .catch(() => logout());
+  .then((profile) =>
+    
+    setUser((prevUser) => ({
+      ...prevUser,       // 기존 값 유지
+      ...profile,        // 새로 받아온 값 덮어쓰기
+      token,             // token도 다시 저장
+    }))
+  )
+  .catch(() => logout());
     } else {
       setUser(null);
     }
   }, [token]);
 
   return (
-    <AuthContext.Provider value={{ token, user, setToken, logout }}>
+    <AuthContext.Provider value={{ token, user, setToken, logout, setUser }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const mapData: Record<string, string[]> = {
   리프레: ["죽은용의 둥지", "운명의 동굴", "용의 협곡"],
@@ -23,6 +24,12 @@ export default function PartyForm() {
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const router = useRouter();
+
+
+
+    const token = localStorage.getItem("authToken");
+
 
   const togglePosition = (pos: string) => {
     setSelectedPositions((prev) =>
@@ -52,12 +59,21 @@ export default function PartyForm() {
     setError("");
 
     try {
-      await axios.post(`${process.env.NEXT_PUBLIC_API_BASE}/party`, {
+      await axios.post(
+      `${process.env.NEXT_PUBLIC_API_BASE}/party`,
+      {
         map: selectedMap,
         subMap: selectedSubMap,
         positions: selectedPositions,
         content,
-      });
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
 
       alert("모집글이 성공적으로 등록되었습니다!");
       // 초기화
@@ -65,6 +81,7 @@ export default function PartyForm() {
       setSelectedSubMap("");
       setSelectedPositions([]);
       setContent("");
+      router.push("/party");
     } catch (e) {
       setError("모집글 등록에 실패했습니다. 다시 시도해주세요.");
     } finally {
@@ -132,9 +149,13 @@ export default function PartyForm() {
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="모집하는 파티에 대한 상세 내용을 작성해주세요."
+                maxLength={200} // ✅ 글자 수 제한
                 className="w-full p-3 rounded bg-gray-800 border border-gray-600 text-white resize-none focus:outline-none focus:ring-2 focus:ring-yellow-400"
                 disabled={loading}
               />
+              <div className="text-right text-sm text-gray-400 mt-1">
+                {content.length} / 200자
+              </div>
             </div>
           )}
         </div>

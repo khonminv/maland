@@ -1,8 +1,9 @@
 "use client";
-import React from "react";
+import React, { useEffect,useState } from "react";
 import { useAuth } from "@/app/context/AuthContext";
 import DiscordLoginButton from "../Discordlogin";
 import Link from "next/link";
+
 
 export default function Nav() {
   const { token, user, logout } = useAuth();
@@ -15,7 +16,7 @@ export default function Nav() {
     const ext = isGif ? "gif" : "png";
     return `https://cdn.discordapp.com/avatars/${user.discordId}/${user.avatar}.${ext}`;
   }
-
+  
   return (
     <nav className="flex items-center gap-6 text-yellow-400">
       {token && user ? (
@@ -24,6 +25,8 @@ export default function Nav() {
             href="/my"
             className="flex items-center gap-2 hover:text-yellow-300 transition cursor-pointer"
           >
+            <p>{user.job}</p>
+             <p>{user.level}</p>
             <img
               src={getAvatarUrl(user)}
               alt={`${user.username} 프로필`}

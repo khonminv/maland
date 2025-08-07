@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
 import { useAuth } from "@/app/context/AuthContext";
-import type { AxiosError } from "axios";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface UserLite {
   discordId: string;
@@ -21,6 +21,7 @@ interface Trade {
   description: string;
   status: string;
   isCompleted: boolean;
+  createdAt?: string;
   author?: {
     username: string;
     discordId: string;
@@ -45,21 +46,94 @@ const subMapsByMap: Record<string, string[]> = {
   리프레: ["죽은용의 둥지", "붉은 켄타우로스의 영역"],
   빅토리아: ["세부맵1", "세부맵2"],
 };
+function timeAgo(dateString: string) {
+  const date = new Date(dateString);
+  const now = new Date();
+  const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+  if (seconds < 60) return `${seconds}초 전`;
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}분 전`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}시간 전`;
+  const days = Math.floor(hours / 24);
+  return `${days}일 전`;
+}
 
 export default function TradePage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // URL 쿼리에서 초기 필터값 가져오기
+  const initialMapFilter = searchParams.get("map") || "";
+  const initialSubMapFilter = searchParams.get("subMap") || "";
+  const initialShowCompleted = searchParams.get("showCompleted") === "true";
+
   const { user } = useAuth();
+
+  const [mapFilter, setMapFilter] = useState(initialMapFilter);
+  const [subMapFilter, setSubMapFilter] = useState(initialSubMapFilter);
+  const [showCompleted, setShowCompleted] = useState(initialShowCompleted);
+
   const [trades, setTrades] = useState<Trade[]>([]);
   const [filtered, setFiltered] = useState<Trade[]>([]);
-  const [mapFilter, setMapFilter] = useState("");
-  const [subMapFilter, setSubMapFilter] = useState("");
   const [avgPrices, setAvgPrices] = useState<AvgPrice[]>([]);
-  const [showCompleted, setShowCompleted] = useState(false);
 
-  useEffect(() => {
-    fetchTrades();
-    fetchAvgPrices();
-  }, []);
+  // 쿼리파라미터 업데이트 함수
+  const updateQuery = (params: {
+    map?: string;
+    subMap?: string;
+    showCompleted?: boolean;
+  }) => {
+    const query = new URLSearchParams();
 
+    // map 설정
+    if (params.map !== undefined) {
+      if (params.map) query.set("map", params.map);
+    } else if (mapFilter) {
+      query.set("map", mapFilter);
+    }
+
+    // subMap 설정
+    if (params.subMap !== undefined) {
+      if (params.subMap) query.set("subMap", params.subMap);
+    } else if (subMapFilter) {
+      query.set("subMap", subMapFilter);
+    }
+
+    // showCompleted 설정
+    if (params.showCompleted !== undefined) {
+      if (params.showCompleted) query.set("showCompleted", "true");
+      else query.delete("showCompleted");
+    } else if (showCompleted) {
+      query.set("showCompleted", "true");
+    }
+
+    const queryString = query.toString();
+    router.replace(
+    `${window.location.pathname}${queryString ? `?${queryString}` : ""}`
+  );
+  };
+
+  // 필터 변경 시 함수들
+  const onMapFilterChange = (m: string) => {
+    setMapFilter(m);
+    setSubMapFilter("");
+    updateQuery({ map: m, subMap: "" });
+  };
+
+  const onSubMapFilterChange = (sm: string) => {
+    setSubMapFilter(sm);
+    updateQuery({ subMap: sm });
+  };
+
+  const onShowCompletedToggle = () => {
+    const newValue = !showCompleted;
+    setShowCompleted(newValue);
+    updateQuery({ showCompleted: newValue });
+  };
+
+  // 서버에서 거래글 목록 가져오기
   const fetchTrades = async () => {
     try {
       const res = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE}/trades`);
@@ -69,15 +143,25 @@ export default function TradePage() {
     }
   };
 
+  // 평균 가격 데이터 가져오기
   const fetchAvgPrices = async () => {
     try {
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE}/trades/average-prices-by-submap`);
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE}/trades/average-prices-by-submap`
+      );
       setAvgPrices(res.data);
     } catch (error) {
       console.error(error);
     }
   };
 
+  // 초기 데이터 로딩
+  useEffect(() => {
+    fetchTrades();
+    fetchAvgPrices();
+  }, []);
+
+  // 필터 적용
   useEffect(() => {
     let result = trades;
 
@@ -99,7 +183,9 @@ export default function TradePage() {
   const toggleStatus = async (id: string, currentStatus?: string) => {
     try {
       const newStatus = currentStatus === "거래완료" ? "거래가능" : "거래완료";
-      await axios.patch(`${process.env.NEXT_PUBLIC_API_BASE}/trades/${id}/status`, { status: newStatus });
+      await axios.patch(`${process.env.NEXT_PUBLIC_API_BASE}/trades/${id}/status`, {
+        status: newStatus,
+      });
       fetchTrades();
       fetchAvgPrices();
     } catch (error) {
@@ -139,11 +225,9 @@ export default function TradePage() {
       );
 
       setTrades((prev) =>
-        prev.map((t) =>
-          t._id === tradeId ? { ...t, status: "거래중" } : t
-        )
+        prev.map((t) => (t._id === tradeId ? { ...t, status: "거래중" } : t))
       );
-      
+
       alert("거래 신청 완료!");
       fetchTrades();
       fetchAvgPrices();
@@ -195,11 +279,13 @@ export default function TradePage() {
 
   const filteredAvgPrices =
     mapFilter && subMapFilter
-      ? avgPrices.filter((ap) => ap._id.mapName === mapFilter && ap._id.subMap === subMapFilter)
+      ? avgPrices.filter(
+          (ap) => ap._id.mapName === mapFilter && ap._id.subMap === subMapFilter
+        )
       : [];
 
   return (
-    <div className="p-6 max-w-5xl mx-auto font-sans text-gray-900">
+    <div className="p-6 max-w-5xl font-sans text-gray-900">
       <h1 className="text-3xl font-extrabold mb-6 text-center text-gradient bg-gradient-to-r from-purple-600 via-pink-500 to-red-500 bg-clip-text text-transparent">
         거래 게시판
       </h1>
@@ -208,10 +294,7 @@ export default function TradePage() {
         {maps.map((m) => (
           <button
             key={m}
-            onClick={() => {
-              setMapFilter(m);
-              setSubMapFilter("");
-            }}
+            onClick={() => onMapFilterChange(m)}
             className={`px-5 py-2 rounded-lg font-semibold transition-shadow duration-300 ${
               mapFilter === m
                 ? "bg-gradient-to-r from-green-400 to-green-600 text-white shadow-lg"
@@ -227,7 +310,7 @@ export default function TradePage() {
         <div className="mb-10 text-center">
           <select
             value={subMapFilter}
-            onChange={(e) => setSubMapFilter(e.target.value)}
+            onChange={(e) => onSubMapFilterChange(e.target.value)}
             className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition"
           >
             <option value="">서브맵 선택</option>
@@ -243,7 +326,7 @@ export default function TradePage() {
       <div className="flex gap-6 items-center justify-center mb-6">
         <div className=" text-center">
           <button
-            onClick={() => setShowCompleted((prev) => !prev)}
+            onClick={onShowCompletedToggle}
             className="px-4 py-2 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 transition"
           >
             {showCompleted ? "거래 완료 숨기기" : "거래 완료 보기"}
@@ -279,7 +362,9 @@ export default function TradePage() {
                   className="py-3 flex justify-between items-center text-sm font-medium"
                 >
                   <span className="text-purple-700">{_id.subMap}</span>
-                  <span className="text-indigo-600 font-bold">{avgPrice.toLocaleString()} 메소</span>
+                  <span className="text-indigo-600 font-bold">
+                    {avgPrice.toLocaleString()} 메소
+                  </span>
                   <span className="text-gray-400">({count}건)</span>
                 </li>
               ))}
@@ -287,10 +372,12 @@ export default function TradePage() {
           )}
         </section>
       ) : (
-        <p className="text-center text-gray-400 mb-12">서브맵을 선택해야 평균 가격을 볼 수 있습니다.</p>
+        <p className="text-center text-gray-400 mb-12">
+          서브맵을 선택해야 평균 가격을 볼 수 있습니다.
+        </p>
       )}
 
-      <div className="flex flex-col md:flex-row gap-8">
+      <div className="w-full flex flex-col md:flex-row gap-8">
         <TradeList
           title="🛒 삽니다"
           trades={filtered.filter((t) => t.type === "삽니다")}
@@ -335,7 +422,9 @@ function TradeList({
     <section className="w-full md:w-1/2 bg-white rounded-2xl shadow-xl p-6 flex flex-col">
       <h2
         className={`text-2xl font-bold mb-6 border-b-4 pb-3 ${
-          title.includes("삽니다") ? "border-green-500 text-green-600" : "border-red-500 text-red-600"
+          title.includes("삽니다")
+            ? "border-green-500 text-green-600"
+            : "border-red-500 text-red-600"
         }`}
       >
         {title}
@@ -364,6 +453,11 @@ function TradeList({
                   {item.status}
                 </span>
               </div>
+              {item.createdAt && (
+                <p className="text-xs text-gray-400 mb-2">
+                  {timeAgo(item.createdAt)}
+                </p>
+              )}
               <h3 className="text-lg font-semibold text-gray-900 mb-2">{item.title}</h3>
               {item.author && (
                 <div className="flex items-center gap-2 mb-2">
@@ -378,7 +472,9 @@ function TradeList({
               )}
               <p className="text-gray-700 mb-4 whitespace-pre-wrap">{item.description}</p>
               <div className="flex justify-between items-center">
-                <span className="text-indigo-600 font-extrabold text-xl">{item.price.toLocaleString()} 메소</span>
+                <span className="text-indigo-600 font-extrabold text-xl">
+                  {item.price.toLocaleString()} 메소
+                </span>
                 <div className="flex gap-3">
                   {/* 거래 신청 버튼: 상태가 "거래가능"일 때만 활성화 */}
                   {/* {item.status === "거래가능" && (

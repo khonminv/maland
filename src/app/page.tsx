@@ -40,7 +40,7 @@ export default function HomePage() {
           
           <FeatureCard
             title="자리 거래"
-            desc="맵별로 자리 거래 및 평균 시세도 확인"
+            desc="맵별로 자리 거래 및 평균 시세 확인"
             href="/trade"
             icon={<FiMapPin size={28} />}
           />
