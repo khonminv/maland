@@ -1,0 +1,221 @@
+{
+  "리프레": [
+    {
+      "code": 240010400,
+      "name_ko": "미나르숲: 숲의 갈림길",
+      "name_en": "Leafre: Forest : Crossroad"
+    },
+    {
+      "code": 240010500,
+      "name_ko": "미나르숲: 산양의 골짜기1",
+      "name_en": "Leafre: Valley of the Antelope"
+    },
+    {
+      "code": 240010600,
+      "name_ko": "미나르숲: 하늘 둥지2",
+      "name_en": "Leafre: Sky Nest II"
+    },
+    {
+      "code": 240010800,
+      "name_ko": "미나르숲: 하늘 둥지 입구",
+      "name_en": "Leafre: Entrance to Sky Nest"
+    },
+    {
+      "code": 240020000,
+      "name_ko": "미나르숲: 붉은 켄타우로스의 영역",
+      "name_en": "Leafre: The Area of Red Kentaurus"
+    },
+    {
+      "code": 240020100,
+      "name_ko": "미나르숲: 불과 어둠의 전장",
+      "name_en": "Leafre: Battlefield of Fire and Darkness"
+    },
+    {
+      "code": 240020200,
+      "name_ko": "미나르숲: 검은 켄타우로스의 영역",
+      "name_en": "Leafre: The Area of Black Kentaurus"
+    },
+    {
+      "code": 240020300,
+      "name_ko": "미나르숲: 물과 어둠의 전장",
+      "name_en": "Leafre: Battlefield of Water and Darkness"
+    },
+    {
+      "code": 240020400,
+      "name_ko": "미나르숲: 푸른 켄타우로스의 영역",
+      "name_en": "Leafre: The Area of Blue Kentaurus"
+    },
+    {
+      "code": 240030000,
+      "name_ko": "미나르숲: 용의 숲 입구",
+      "name_en": "Leafre: Entrance to Dragon Forest"
+    },
+    {
+      "code": 240030101,
+      "name_ko": "미나르숲: 불타는 숲",
+      "name_en": "Leafre: The Burning Forest"
+    },
+    {
+      "code": 240040200,
+      "name_ko": "미나르숲: 협곡의 동쪽길",
+      "name_en": "Leafre: Canyon : East Road"
+    },
+    {
+      "code": 240040210,
+      "name_ko": "히든스트리트: 블루 와이번의 둥지",
+      "name_en": "Hidden Street: Blue Wyvern's Nest"
+    },
+    {
+      "code": 240040510,
+      "name_ko": "미나르숲: 죽은 용의 둥지",
+      "name_en": "Leafre: Nest of a Dead Dragon"
+    },
+    {
+      "code": 240040511,
+      "name_ko": "미나르숲: 남겨진 용의 둥지1",
+      "name_en": "Leafre: The Dragon Nest Left Behind"
+    },
+    {
+      "code": 240040520,
+      "name_ko": "미나르숲: 망가진 용의 둥지",
+      "name_en": "Leafre: Destroyed Dragon Nest"
+    },
+    {
+      "code": 240040521,
+      "name_ko": "미나르숲: 위험한 용의 둥지",
+      "name_en": "Leafre: Dangerous Dragon Nest"
+    },
+    {
+      "code": 240040600,
+      "name_ko": "미나르숲: 큰 둥지 봉우리",
+      "name_en": "Leafre: Peak of the Big Nest"
+    }
+  ],
+  "빅토리아": [
+    {
+      "code": 222010000,
+      "name_ko": "루더스호수: 까막산 입구",
+      "name_en": "Korean Folk Town: Entrance to Black Mountain"
+    },
+    {
+      "code": 101030108,
+      "name_ko": "빅토리아로드: 유적의 무덤4",
+      "name_en": "Victoria Road: Remains <Tomb> IV"
+    },
+    {
+      "code": 101030109,
+      "name_ko": "빅토리아로드: 유적의 낭떠러지",
+      "name_en": "Victoria Road: Remains <Cliff>"
+    },
+    {
+      "code": 101030110,
+      "name_ko": "히든스트리트: 제1군영",
+      "name_en": "Victoria Road: Camp 1"
+    },
+    {
+      "code": 101030111,
+      "name_ko": "히든스트리트: 제2군영",
+      "name_en": "Victoria Road: Camp 2"
+    },
+    {
+      "code": 101030112,
+      "name_ko": "히든스트리트: 제3군영",
+      "name_en": "Victoria Road: Camp 3"
+    }
+  ],
+  "엘나스":[
+    {
+      "code": 211041000,
+      "name_ko": "폐광: 늑대의영역3",
+      "name_en": "El Nath: Wolf Territory V"
+    },
+    {
+      "code": 211041100,
+      "name_ko": "폐광: 죽은나무의숲1",
+      "name_en": "El Nath: Forest of Dead Trees I"
+    },
+    {
+      "code": 211041200,
+      "name_ko": "폐광: 죽은나무의숲2",
+      "name_en": "El Nath: Forest of Dead Trees II"
+    },
+    {
+      "code": 211041300,
+      "name_ko": "폐광: 죽은나무의숲3",
+      "name_en": "El Nath: Forest of Dead Trees III"
+    },
+    {
+      "code": 211041400,
+      "name_ko": "폐광: 죽은나무의숲4",
+      "name_en": "El Nath: Forest of Dead Trees IV"
+    },
+    {
+      "code": 211050000,
+      "name_ko": "엘나스산맥: 차디찬벌판",
+      "name_en": "El Nath: Icy Cold Field"
+    },
+    {
+      "code": 200080000,
+      "name_ko": "스카이로드: 구름공원6",
+      "name_en": "Orbis: Cloud Park VI"
+    },
+    
+    {
+      "code": 230040100,
+      "name_ko": "아쿠아로드: 깊은 바다 협곡2",
+      "name_en": "Aqua Road: Deep Sea Gorge II"
+    },
+    {
+      "code": 230040300,
+      "name_ko": "아쿠아로드: 위험한 바다 협곡2",
+      "name_en": "Aqua Road: Dangerous Sea Gorge II"
+    },
+    {
+      "code": 230040400,
+      "name_ko": "아쿠아로드: 난파선의 무덤",
+      "name_en": "Aqua Road: The Grave of a Wrecked Ship"
+    },
+    {
+      "code": 251010402,
+      "name_ko": "무릉도원: 빨간코 해적단 소굴2",
+      "name_en": "Herb Town: Red-Nose Pirate Den 2"
+    },
+    {
+      "code": 251010403,
+      "name_ko": "무릉도원: 빨간코 해적단 소굴3",
+      "name_en": "Herb Town: Red-Nose Pirate Den 3"
+    }
+  ],
+  "루더스/니할":[
+    {
+      "code": 220040000,
+      "name_ko": "루디브리엄성: 시간의길<1>",
+      "name_en": "Ludibrium: The Path of Time <1>"
+    },
+    {
+      "code": 220040400,
+      "name_ko": "루디브리엄성: 시간의길<4>",
+      "name_en": "Ludibrium: The Path of Time <4>"
+    },
+    {
+      "code": 220050200,
+      "name_ko": "루디브리엄성: 잃어버린시간<2>",
+      "name_en": "Ludibrium: Lost Time <2>"
+    },
+    {
+      "code": 220060201,
+      "name_ko": "히든스트리트: 삐뚤어진 시간 (듀파)",
+      "name_en": "Hidden Street: Unbalanced Time"
+    },
+    {
+      "code": 220060300,
+      "name_ko": "시계탑최하층: 뒤틀린 시간의 길<4> (바이킹)",
+      "name_en": "Ludibrium: Warped Path of Time<4>"
+    },
+    {
+      "code": 110040000,
+      "name_ko": "플로리나로드: 따뜻한모래밭",
+      "name_en": "Florina Road: Hot Sand"
+    }
+  ]
+}

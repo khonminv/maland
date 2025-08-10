@@ -14,12 +14,12 @@ interface UserLite {
 interface Trade {
   _id: string;
   type: "삽니다" | "팝니다";
-  mapName: string;
-  subMap: string;
+  mapName: string;      // 대분류 (예: 리프레/빅토리아)
+  subMap: string;       // 소분류 (예: 죽은용의 둥지 등)
   title: string;
   price: number;
   description: string;
-  status: string;
+  status: string;       // 거래가능/거래중/거래완료
   isCompleted: boolean;
   createdAt?: string;
   author?: {
@@ -39,13 +39,12 @@ interface AvgPrice {
   avgPrice: number;
   count: number;
 }
-
-const maps = ["리프레", "빅토리아"];
-
-const subMapsByMap: Record<string, string[]> = {
-  리프레: ["죽은용의 둥지", "붉은 켄타우로스의 영역"],
-  빅토리아: ["세부맵1", "세부맵2"],
-};
+interface SubMap {
+  code: number;
+  name_ko: string;
+  name_en: string;
+}
+// 시간 표시
 function timeAgo(dateString: string) {
   const date = new Date(dateString);
   const now = new Date();
@@ -63,13 +62,16 @@ function timeAgo(dateString: string) {
 export default function TradePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { user } = useAuth();
 
-  // URL 쿼리에서 초기 필터값 가져오기
+  // URL 쿼리에서 초기 필터값
   const initialMapFilter = searchParams.get("map") || "";
   const initialSubMapFilter = searchParams.get("subMap") || "";
   const initialShowCompleted = searchParams.get("showCompleted") === "true";
 
-  const { user } = useAuth();
+  // JSON에서 불러온 대분류/소분류
+  const [mapData, setMapData] = useState<Record<string, SubMap[]>>({});
+
 
   const [mapFilter, setMapFilter] = useState(initialMapFilter);
   const [subMapFilter, setSubMapFilter] = useState(initialSubMapFilter);
@@ -79,48 +81,69 @@ export default function TradePage() {
   const [filtered, setFiltered] = useState<Trade[]>([]);
   const [avgPrices, setAvgPrices] = useState<AvgPrice[]>([]);
 
-  // 쿼리파라미터 업데이트 함수
-  const updateQuery = (params: {
-    map?: string;
-    subMap?: string;
-    showCompleted?: boolean;
-  }) => {
+  // maps.json 불러오기 (대분류/소분류)
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch("/data/trade_data.json");
+        if (res.ok) {
+          const data = (await res.json()) as Record<string, SubMap[]>;
+          setMapData(data);
+
+          if (initialMapFilter && !data[initialMapFilter]) {
+            setMapFilter("");
+            setSubMapFilter("");
+          }
+          if (
+            initialMapFilter &&
+            initialSubMapFilter &&
+            !data[initialMapFilter]?.some((sm) => sm.name_ko === initialSubMapFilter)
+          ) {
+            setSubMapFilter("");
+          }
+        } else {
+          console.error("maps.json 불러오기 실패");
+        }
+      } catch (e) {
+        console.error("maps.json 로드 에러:", e);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // 쿼리파라미터 업데이트
+  const updateQuery = (params: { map?: string; subMap?: string; showCompleted?: boolean }) => {
     const query = new URLSearchParams();
 
-    // map 설정
-    if (params.map !== undefined) {
-      if (params.map) query.set("map", params.map);
-    } else if (mapFilter) {
-      query.set("map", mapFilter);
-    }
+    // map
+    const nextMap = params.map !== undefined ? params.map : mapFilter;
+    if (nextMap) query.set("map", nextMap);
 
-    // subMap 설정
-    if (params.subMap !== undefined) {
-      if (params.subMap) query.set("subMap", params.subMap);
-    } else if (subMapFilter) {
-      query.set("subMap", subMapFilter);
-    }
+    // subMap
+    const nextSub = params.subMap !== undefined ? params.subMap : subMapFilter;
+    if (nextSub) query.set("subMap", nextSub);
 
-    // showCompleted 설정
-    if (params.showCompleted !== undefined) {
-      if (params.showCompleted) query.set("showCompleted", "true");
-      else query.delete("showCompleted");
-    } else if (showCompleted) {
-      query.set("showCompleted", "true");
-    }
+    // 완료글 보기
+    const nextShowCompleted =
+      params.showCompleted !== undefined ? params.showCompleted : showCompleted;
+    if (nextShowCompleted) query.set("showCompleted", "true");
 
-    const queryString = query.toString();
-    router.replace(
-    `${window.location.pathname}${queryString ? `?${queryString}` : ""}`
-  );
+    const qs = query.toString();
+    router.replace(`${window.location.pathname}${qs ? `?${qs}` : ""}`);
   };
 
-  // 필터 변경 시 함수들
+  // 필터 변경
   const onMapFilterChange = (m: string) => {
-    setMapFilter(m);
-    setSubMapFilter("");
-    updateQuery({ map: m, subMap: "" });
-  };
+  setMapFilter(m);
+
+  // 대분류 변경 시, 해당 대분류에 없는 소분류라면 초기화
+  const valid = m && mapData[m] ? mapData[m] : [];
+  const nextSub = valid.some((sm) => sm.name_ko === subMapFilter) ? subMapFilter : "";
+
+  setSubMapFilter(nextSub);
+  updateQuery({ map: m, subMap: nextSub });
+};
+
 
   const onSubMapFilterChange = (sm: string) => {
     setSubMapFilter(sm);
@@ -128,12 +151,12 @@ export default function TradePage() {
   };
 
   const onShowCompletedToggle = () => {
-    const newValue = !showCompleted;
-    setShowCompleted(newValue);
-    updateQuery({ showCompleted: newValue });
+    const next = !showCompleted;
+    setShowCompleted(next);
+    updateQuery({ showCompleted: next });
   };
 
-  // 서버에서 거래글 목록 가져오기
+  // 서버에서 거래글 목록
   const fetchTrades = async () => {
     try {
       const res = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE}/trades`);
@@ -143,7 +166,7 @@ export default function TradePage() {
     }
   };
 
-  // 평균 가격 데이터 가져오기
+  // 평균 가격 데이터
   const fetchAvgPrices = async () => {
     try {
       const res = await axios.get(
@@ -217,11 +240,7 @@ export default function TradePage() {
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE}/trades/${tradeId}/reserve`,
         {},
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`, // user.token에 실제 토큰이 있어야 함
-          },
-        }
+        { headers: { Authorization: `Bearer ${user.token}` } }
       );
 
       setTrades((prev) =>
@@ -250,11 +269,7 @@ export default function TradePage() {
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE}/trades/${tradeId}/cancel-reserve`,
         {},
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${user.token}` } }
       );
 
       setTrades((prev) =>
@@ -275,8 +290,11 @@ export default function TradePage() {
     }
   };
 
-  const currentSubMaps = mapFilter ? subMapsByMap[mapFilter] || [] : [];
+  // 선택된 대분류의 소분류 목록
+  const currentSubMaps: SubMap[] = mapFilter ? mapData[mapFilter] || [] : [];
 
+
+  // 평균가(최근 2시간) 필터링
   const filteredAvgPrices =
     mapFilter && subMapFilter
       ? avgPrices.filter(
@@ -284,14 +302,18 @@ export default function TradePage() {
         )
       : [];
 
+  // 대분류 버튼 목록
+  const categories = Object.keys(mapData); // 예: ["리프레","빅토리아","엘나스",...]
+
   return (
     <div className="p-6 max-w-5xl font-sans text-gray-900">
       <h1 className="text-3xl font-extrabold mb-6 text-center text-gradient bg-gradient-to-r from-purple-600 via-pink-500 to-red-500 bg-clip-text text-transparent">
         거래 게시판
       </h1>
 
+      {/* 대분류(맵) 버튼 */}
       <div className="flex flex-wrap gap-3 justify-center mb-6">
-        {maps.map((m) => (
+        {categories.map((m) => (
           <button
             key={m}
             onClick={() => onMapFilterChange(m)}
@@ -306,6 +328,7 @@ export default function TradePage() {
         ))}
       </div>
 
+      {/* 소분류 선택 */}
       {mapFilter && (
         <div className="mb-10 text-center">
           <select
@@ -315,38 +338,38 @@ export default function TradePage() {
           >
             <option value="">서브맵 선택</option>
             {currentSubMaps.map((sm) => (
-              <option key={sm} value={sm}>
-                {sm}
+              <option key={sm.code} value={sm.name_ko}>
+                {sm.name_ko}
               </option>
             ))}
           </select>
         </div>
       )}
-
       <div className="flex gap-6 items-center justify-center mb-6">
-        <div className=" text-center">
-          <button
-            onClick={onShowCompletedToggle}
-            className="px-4 py-2 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 transition"
-          >
-            {showCompleted ? "거래 완료 숨기기" : "거래 완료 보기"}
-          </button>
-        </div>
-
-        <div className="text-center ">
-          {user ? (
-            <Link
-              href="/trade/new"
-              className="inline-block px-5 py-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-600 text-white font-semibold shadow-lg hover:scale-105 transition-transform"
+          <div className="text-center">
+            <button
+              onClick={onShowCompletedToggle}
+              className="px-4 py-2 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 transition"
             >
-              + 새 글 등록
-            </Link>
-          ) : (
-            <p className="text-sm text-gray-400">로그인하면 거래 등록을 할 수 있습니다.</p>
-          )}
-        </div>
-      </div>
+              {showCompleted ? "거래 완료 숨기기" : "거래 완료 보기"}
+            </button>
+          </div>
 
+          <div className="text-center">
+            {user ? (
+              <Link
+                href="/trade/new"
+                className="inline-block px-5 py-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-600 text-white font-semibold shadow-lg hover:scale-105 transition-transform"
+              >
+                + 새 글 등록
+              </Link>
+            ) : (
+              <p className="text-sm text-gray-400">로그인하면 거래 등록을 할 수 있습니다.</p>
+            )}
+          </div>
+        </div>
+
+      {/* 평균 거래가 */}
       {mapFilter && subMapFilter ? (
         <section className="mb-12 bg-white rounded-xl shadow-lg p-6">
           <h2 className="text-xl font-semibold mb-4 border-b border-purple-300 pb-2">
@@ -363,7 +386,7 @@ export default function TradePage() {
                 >
                   <span className="text-purple-700">{_id.subMap}</span>
                   <span className="text-indigo-600 font-bold">
-                    {avgPrice.toLocaleString()} 메소
+                    {Math.round(avgPrice).toLocaleString()} 메소
                   </span>
                   <span className="text-gray-400">({count}건)</span>
                 </li>
@@ -377,6 +400,7 @@ export default function TradePage() {
         </p>
       )}
 
+      {/* 리스트 2단 (삽니다 / 팝니다) */}
       <div className="w-full flex flex-col md:flex-row gap-8">
         <TradeList
           title="🛒 삽니다"
@@ -453,57 +477,37 @@ function TradeList({
                   {item.status}
                 </span>
               </div>
-              {item.createdAt && (
-                <p className="text-xs text-gray-400 mb-2">
-                  {timeAgo(item.createdAt)}
-                </p>
-              )}
               <h3 className="text-lg font-semibold text-gray-900 mb-2">{item.title}</h3>
-              {item.author && (
-                <div className="flex items-center gap-2 mb-2">
-                  <img
-                    src={`https://cdn.discordapp.com/avatars/${item.author.discordId}/${item.author.avatar}.png`}
-                    alt={`${item.author.username} 프로필`}
-                    className="w-6 h-6 rounded-full"
-                    onError={(e) => (e.currentTarget.src = "/images/discord.png")}
-                  />
-                  <span className="text-sm text-gray-500">{item.author.username}</span>
-                </div>
-              )}
-              <p className="text-gray-700 mb-4 whitespace-pre-wrap">{item.description}</p>
-              <div className="flex justify-between items-center">
-                <span className="text-indigo-600 font-extrabold text-xl">
-                  {item.price.toLocaleString()} 메소
-                </span>
-                <div className="flex gap-3">
-                  {/* 거래 신청 버튼: 상태가 "거래가능"일 때만 활성화 */}
-                  {/* {item.status === "거래가능" && (
-                    <button
-                      onClick={() => onReserve(item._id)}
-                      className="px-4 py-2 rounded-lg bg-yellow-500 hover:bg-yellow-600 text-white font-semibold transition-colors duration-300"
-                    >
-                      거래 신청
-                    </button>
-                  )} */}
-
-                  {/* 거래중이고 reservedBy.discordId === user.discordId 인 경우만 거래 취소 버튼 */}
-                  {/* {item.status === "거래중" &&
-                    item.reservedBy &&
-                    user &&
-                    item.reservedBy.discordId === user.discordId && (
-                      <button
-                        onClick={() => onCancelReserve(item._id)}
-                        className="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-semibold transition-colors duration-300"
-                      >
-                        거래 취소
-                      </button>
-                    )} */}
-
-                  {/* 거래중 상태 표시 */}
-                  {/* {item.status === "거래중" && (
-                    <span className="px-4 py-2 rounded-lg bg-gray-400 text-white font-semibold">거래중</span>
-                  )} */}
-                </div>
+              <div className="flex justify-between mt-6">
+                <div>
+                    <p className="text-gray-700 mb-4 whitespace-pre-wrap max-w-48 break-all">{item.description}</p>
+                    <div className="flex justify-between items-center">
+                      <span className="text-indigo-600 font-extrabold text-xl">
+                        {item.price.toLocaleString()} 메소
+                      </span>
+                    </div>
+                  </div>
+                  <div>
+                    {item.author && (
+                        <div onClick={() =>
+                            window.open(
+                              `https://discord.com/users/${item.author?.discordId}`,
+                              "_blank"
+                            )
+                          } className="flex items-center gap-2 mb-2 cursor-pointer">
+                          <img
+                            src={`https://cdn.discordapp.com/avatars/${item.author.discordId}/${item.author.avatar}.png`}
+                            alt={`${item.author.username} 프로필`}
+                            className="w-6 h-6 rounded-full"
+                            onError={(e) => (e.currentTarget.src = "/images/discord.png")}
+                          />
+                          <p className="text-sm text-gray-500">{item.author.username}</p>
+                        </div>
+                      )}
+                      {item.createdAt && (
+                        <p className="text-xs text-gray-400 mb-2 text-right">{timeAgo(item.createdAt)}</p>
+                      )}
+                  </div>
               </div>
             </li>
           ))}

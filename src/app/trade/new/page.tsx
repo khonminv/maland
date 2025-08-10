@@ -3,19 +3,11 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
-
-const subMapsByMap: Record<string, string[]> = {
-  리프레: ["죽은용의 둥지", "붉은 켄타우로스의 영역", "기타 리프레 서브맵"],
-  빅토리아: ["빅토리아 서브맵1", "빅토리아 서브맵2"],
-};
-
 interface User {
   id: string;
   username: string;
   avatar?: string;
 }
-
-
 
 interface AvgPrice {
   _id: {
@@ -26,48 +18,62 @@ interface AvgPrice {
   count: number;
 }
 
+interface SubMap {
+  code: number;
+  name_ko: string;
+  name_en: string;
+}
+
 export default function NewTradePage() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
 
+  const [mapData, setMapData] = useState<Record<string, SubMap[]>>({});
   const [form, setForm] = useState({
     type: "삽니다",
-    mapName: "리프레",
-    subMap: subMapsByMap["리프레"][0], // 기본값 첫번째 서브맵
+    mapName: "",
+    subMap: "",
     price: "",
     description: "",
   });
 
   const [avgPrices, setAvgPrices] = useState<AvgPrice[]>([]);
 
+  // JSON 데이터 + 유저 정보 불러오기
   useEffect(() => {
+    fetch("/data/trade_data.json")
+      .then((res) => res.json())
+      .then((data) => {
+        setMapData(data);
+        const firstMap = Object.keys(data)[0];
+        setForm((prev) => ({
+          ...prev,
+          mapName: firstMap,
+          subMap: data[firstMap]?.[0]?.name_ko || "",
+        }));
+      })
+      .catch((err) => console.error("맵 데이터 불러오기 실패", err));
+
     const token = localStorage.getItem("authToken");
-    if (!token) {
-      console.log("토큰이 없음");
-      return;
-    }
+    if (!token) return;
 
-axios
-  .get(`${process.env.NEXT_PUBLIC_API_BASE}/auth/me`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
-  .then((res) => {
-    setUser(res.data);
-  })
-  .catch((err) => console.error("유저 정보 불러오기 실패", err));
-
+    axios
+      .get(`${process.env.NEXT_PUBLIC_API_BASE}/auth/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => setUser(res.data))
+      .catch((err) => console.error("유저 정보 불러오기 실패", err));
   }, []);
 
-
-  // mapName 변경 시 서브맵 자동 변경
+  // mapName 변경 시 첫 번째 서브맵으로 변경
   useEffect(() => {
-    setForm((prev) => ({
-      ...prev,
-      subMap: subMapsByMap[form.mapName]?.[0] || "",
-    }));
-  }, [form.mapName]);
+    if (mapData[form.mapName]) {
+      setForm((prev) => ({
+        ...prev,
+        subMap: mapData[form.mapName][0]?.name_ko || "",
+      }));
+    }
+  }, [form.mapName, mapData]);
 
   // 평균 가격 데이터 불러오기
   useEffect(() => {
@@ -84,40 +90,43 @@ axios
     setForm({ ...form, [name]: value });
   };
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  if (!user) {
-    alert("로그인이 필요합니다.");
-    return;
-  }
+    if (!user) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
 
-  const token = localStorage.getItem("authToken");
-  if (!token) {
-    alert("로그인 토큰이 없습니다.");
-    return;
-  }
-  try {
-    const payload = {
-      ...form,
-      price: Number(form.price),
-      // userId, username, avatar는 서버에서 미들웨어가 자동으로 넣어주기 때문에 안 넣어도 됨
-    };
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      alert("로그인 토큰이 없습니다.");
+      return;
+    }
 
-    await axios.post(`${process.env.NEXT_PUBLIC_API_BASE}/trades`, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const priceNum = Number(form.price);
 
-    router.push("/trade");
-  } catch (err) {
-    console.error(err);
-    alert("글 등록 실패");
-  }
-};
-  // 현재 선택된 mapName의 서브맵별 평균 가격 필터링
-  const filteredAvgPrices = avgPrices.filter((ap) => ap._id.mapName === form.mapName);
+    if (!form.price.trim()) {
+      alert("가격을 입력해주세요.");
+      return;
+    }
+
+    if (isNaN(priceNum) || priceNum < 0 || !Number.isInteger(priceNum)) {
+      alert("가격은 0 이상의 숫자여야 합니다.");
+      return;
+    }
+
+    try {
+      const payload = { ...form, price: priceNum };
+      await axios.post(`${process.env.NEXT_PUBLIC_API_BASE}/trades`, payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      router.push("/trade");
+    } catch (err) {
+      console.error(err);
+      alert("글 등록 실패");
+    }
+  };
 
   return (
     <div className="p-4 max-w-xl mx-auto">
@@ -132,30 +141,35 @@ const handleSubmit = async (e: React.FormEvent) => {
           <option value="삽니다">삽니다</option>
           <option value="팝니다">팝니다</option>
         </select>
+
+        {/* 맵 선택 */}
         <select
           name="mapName"
           value={form.mapName}
           onChange={handleChange}
           className="w-full p-2 border rounded text-black"
         >
-          {Object.keys(subMapsByMap).map((map) => (
+          {Object.keys(mapData).map((map) => (
             <option key={map} value={map}>
               {map}
             </option>
           ))}
         </select>
+
+        {/* 서브맵 선택 */}
         <select
           name="subMap"
           value={form.subMap}
           onChange={handleChange}
           className="w-full p-2 border rounded text-black"
         >
-          {(subMapsByMap[form.mapName] || []).map((sub) => (
-            <option key={sub} value={sub}>
-              {sub}
+          {(mapData[form.mapName] || []).map((sub) => (
+            <option key={sub.code} value={sub.name_ko}>
+              {sub.name_ko}
             </option>
           ))}
         </select>
+
         <input
           type="text"
           name="price"
@@ -164,10 +178,11 @@ const handleSubmit = async (e: React.FormEvent) => {
           onChange={handleChange}
           className="w-full p-2 border rounded text-black"
         />
+
         <div>
           <textarea
             name="description"
-            placeholder="설명 (최대 50자)"
+            placeholder="귓속말 받을 캐릭터 닉네임(최대 50자)"
             value={form.description}
             onChange={handleChange}
             maxLength={50}
@@ -177,7 +192,7 @@ const handleSubmit = async (e: React.FormEvent) => {
             {form.description.length} / 50자
           </div>
         </div>
-        
+
         <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
           등록하기
         </button>
@@ -188,9 +203,7 @@ const handleSubmit = async (e: React.FormEvent) => {
         <h2 className="text-lg font-semibold mb-2">선택한 서브맵 평균 거래 가격</h2>
         {(() => {
           const selectedAvg = avgPrices.find(
-            (ap) =>
-              ap._id.mapName === form.mapName &&
-              ap._id.subMap === form.subMap
+            (ap) => ap._id.mapName === form.mapName && ap._id.subMap === form.subMap
           );
           if (!selectedAvg) {
             return <p>해당 서브맵의 평균 거래가 정보가 없습니다.</p>;
@@ -198,15 +211,14 @@ const handleSubmit = async (e: React.FormEvent) => {
           return (
             <p className="text-sm text-black">
               <strong>{form.subMap}</strong> - 평균 가격:{" "}
-              <span className="text-blue-600 font-bold ">
-                {selectedAvg.avgPrice.toLocaleString()} 메소
+              <span className="text-blue-600 font-bold">
+                {Math.round(selectedAvg.avgPrice).toLocaleString()} 메소
               </span>{" "}
               ({selectedAvg.count}건)
             </p>
           );
         })()}
       </div>
-
     </div>
   );
 }

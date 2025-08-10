@@ -10,6 +10,5 @@ export async function fetchUserProfile(token: string) {
   }
 
   const user = await res.json();
-   console.log("🔍 [fetchUserProfile] 받은 유저 정보:", user);
   return user; // ✅ 바로 user 전체 객체 리턴
 }
