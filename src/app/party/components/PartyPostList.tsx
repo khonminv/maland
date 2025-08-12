@@ -6,10 +6,9 @@ interface Props {
   loading: boolean;
   error: string;
   onApply: (id: string) => void;
-  appliedPartyIds: string[];  // 추가
 }
 
-export default function PartyPostList({ posts, loading, error, onApply, appliedPartyIds }: Props) {
+export default function PartyPostList({ posts, loading, error, onApply }: Props) {
   if (loading) {
     return <div className="text-center text-gray-400">불러오는 중...</div>;
   }
@@ -29,7 +28,7 @@ export default function PartyPostList({ posts, loading, error, onApply, appliedP
           key={post._id}
           post={post}
           onApplyClick={onApply}
-          isApplied={post.isApplied ?? false}
+          isApplied={!!post.isApplied}
         />
       ))}
     </div>

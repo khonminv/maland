@@ -60,6 +60,7 @@ export default function MyPage() {
   const [expandedPartyId, setExpandedPartyId] = useState<string | null>(null);
   const [selectedPartyId, setSelectedPartyId] = useState<string | null>(null);
   const [applicants, setApplicants] = useState<Applicant[]>([]);
+  const [copiedPartyId, setCopiedPartyId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!token) return;
@@ -162,6 +163,41 @@ export default function MyPage() {
     setApplicants([]);
   };
 
+  // 신청 페이지 링크 생성 (환경변수로 커스터마이즈 가능)
+  const buildPartyLink = (id: string) => {
+      const base =
+        (process.env.NEXT_PUBLIC_SITE_BASE?.replace(/\/$/, "") as string) ||
+        (typeof window !== "undefined" ? window.location.origin : "");
+      return `${base}/party/${id}`;
+    };
+
+// 공유 텍스트 생성 + 클립보드 복사
+  const copyPartyInfo = async (party: Party) => {
+    const link = buildPartyLink(party._id);
+    const text = `${party.map} - ${party.subMap} - ${party.positions.join(", ")}
+${party.content}
+
+파티신청: ${link}`;
+
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedPartyId(party._id);
+      setTimeout(() => setCopiedPartyId(null), 1500);
+    } catch {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand("copy");
+        setCopiedPartyId(party._id);
+        setTimeout(() => setCopiedPartyId(null), 1500);
+      } finally {
+        document.body.removeChild(ta);
+      }
+    }
+  };
+
   return (
     <div className="bg-gray-900 min-h-screen text-white py-10 px-4">
       <div className="max-w-4xl mx-auto space-y-8">
@@ -257,6 +293,16 @@ export default function MyPage() {
                   </div>
                   <div className="flex gap-2">
                     <p>{timeAgo(party.createdAt!)}</p>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        copyPartyInfo(party);
+                      }}
+                      className="bg-gray-700 hover:bg-gray-600 text-white px-2 py-1 rounded text-sm"
+                      title="파티 정보+신청 링크 복사"
+                    >
+                      {copiedPartyId === party._id ? "복사됨" : "복사"}
+                    </button>
                     {!party.isClosed && (
                       <button
                         onClick={(e) => {

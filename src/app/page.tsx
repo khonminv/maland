@@ -51,7 +51,7 @@ export default function HomePage() {
             icon={<FiUsers size={28} />}
           />
           <FeatureCard
-            title="스킬트리 시뮬레이터"
+            title="스킬트리 시뮬레이터 - 개발중"
             desc="직업별 스킬트리를 자유롭게 구성 가능."
             href="/skill-simulator"
             icon={<FiActivity size={28} />}

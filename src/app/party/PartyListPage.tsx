@@ -48,7 +48,6 @@ export default function PartyListPage() {
 
   // 토큰이 바뀌면 파티 목록 호출
   useEffect(() => {
-    if (!token) return;
     fetchPartyPosts();
   }, [token]);
 
@@ -171,7 +170,7 @@ export default function PartyListPage() {
         loading={loading}
         error={error}
         onApply={handleApplyClick}
-        appliedPartyIds={[]} // 서버에서 isApplied 처리됨
+        
       />
 
       {selectedPartyId && (
