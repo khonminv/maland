@@ -150,7 +150,7 @@ const SkillCard: React.FC<RowProps> = ({ s, tier, curr, canPlus, canMinus, onPlu
         <div className="flex items-center gap-2">
           <span className={`inline-block rounded border px-1.5 py-0.5 text-[10px] ${typeChip[s.type]} tracking-wide`}>{s.type.toUpperCase()}</span>
           <div className="font-semibold truncate">{s.nameKo}</div>
-          {s.requiredLevel && <span className="text-[10px] px-1.5 py-0.5 rounded bg-neutral-800 border border-neutral-600 text-neutral-300">요구 Lv {s.requiredLevel}</span>}
+      
           {s.prerequisite && lockedBadge(`선행 ${s.prerequisite.minLevel}↑`)}
         </div>
         <div className="text-xs text-neutral-300/80 mt-1 line-clamp-2">{s.description || "설명 없음"}</div>

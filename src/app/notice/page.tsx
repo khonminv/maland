@@ -200,7 +200,7 @@ export default function NoticeBoardPage() {
                   </span>
                   <button
                     onClick={() => handleEnter(n.id)}
-                    className="text-left font-semibold truncate hover:underline"
+                    className="text-left text-white font-semibold truncate hover:underline"
                     title={n.title}
                   >
                     {n.title}

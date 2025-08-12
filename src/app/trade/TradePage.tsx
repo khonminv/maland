@@ -404,9 +404,10 @@ useEffect(() => {
 
       {/* 리스트 2단 (삽니다 / 팝니다) */}
       <div className="w-full flex flex-col md:flex-row gap-8">
+        
         <TradeList
-          title="🛒 삽니다"
-          trades={filtered.filter((t) => t.type === "삽니다")}
+          title="📦 팝니다"
+          trades={filtered.filter((t) => t.type === "팝니다")}
           toggleStatus={toggleStatus}
           deleteTrade={deleteTrade}
           onReserve={handleReserve}
@@ -414,8 +415,8 @@ useEffect(() => {
           user={user}
         />
         <TradeList
-          title="📦 팝니다"
-          trades={filtered.filter((t) => t.type === "팝니다")}
+          title="🛒 삽니다"
+          trades={filtered.filter((t) => t.type === "삽니다")}
           toggleStatus={toggleStatus}
           deleteTrade={deleteTrade}
           onReserve={handleReserve}
