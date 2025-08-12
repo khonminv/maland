@@ -109,7 +109,7 @@ export default function Nav() {
                 <img
                   src={getAvatarUrl(user!)}
                   alt={`${user?.username ?? "유저"} 프로필`}
-                  className="rounded-full w-9 h-9 object-cover"
+                  className="rounded-full w-10 h-9 object-cover"
                   loading="lazy"
                 />
                 <div className="flex-1">

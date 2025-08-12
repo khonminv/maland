@@ -27,7 +27,7 @@ export default function DiscordLoginButton() {
         onClick={() => alert("디스코드 로그인 설정이 누락되었습니다. 환경변수를 확인하세요.")}
         className="inline-flex items-center gap-2 rounded-md bg-indigo-600/50 px-3 py-2 font-semibold text-white cursor-not-allowed"
       >
-        <img src="/images/discord1.svg" alt="Discord" className="h-5 w-5" />
+        <img src="/images/discord1.svg" alt="Discord" className="block w-20 h-6 sm:h-6 sm:w-6" />
         <span className="text-sm sm:text-base">로그인</span>
       </button>
     );
@@ -40,7 +40,7 @@ export default function DiscordLoginButton() {
       aria-label="Discord로 로그인"
       rel="noopener noreferrer"
     >
-      <img src="/images/discord1.svg" alt="" className="h-5 w-16 sm:h-6 sm:w-6" />
+      <img src="/images/discord1.svg" alt="" className=" w-20 h-6 " />
       <span className="text-sm sm:text-base">로그인</span>
     </a>
   );
