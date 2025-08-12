@@ -45,6 +45,13 @@ export default function Nav() {
       ) : (
         <DiscordLoginButton />
       )}
+      <Link 
+      className=" hover:bg-yellow-600 text-white px-3 py-1 rounded transition"
+      href="https://open.kakao.com/o/gxHAI8Lh"
+      target="_blank"
+      >
+        문의하기
+      </Link>
     </nav>
   );
 }

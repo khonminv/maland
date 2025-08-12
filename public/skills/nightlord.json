@@ -1,0 +1,61 @@
+{
+  "jobId": "nightlord",
+  "jobNameKo": "나이트로드",
+  "metadata": {
+    "spRules": {
+      "firstJobLevel": 10,
+      "secondJobLevel": 30,
+      "thirdJobLevel": 70,
+      "fourthJobLevel": 120,
+      "firstJobBonusSP": 1
+    }
+  },
+  "advancements": [
+    {
+      "tier": 1,
+      "jobNameKo": "로그(도적 1차)",
+      "skills": [
+        { "id": "thf_nimble_body", "nameKo": "님블 바디", "type": "passive", "maxLevel": 20, "requiredLevel": 10 },
+        { "id": "thf_disorder", "nameKo": "디스오더", "type": "active", "maxLevel": 20, "requiredLevel": 10 },
+        { "id": "thf_dark_sight", "nameKo": "다크 사이트", "type": "active", "maxLevel": 20, "requiredLevel": 10, "prerequisite": { "skillId": "thf_disorder", "minLevel": 3 } },
+        { "id": "thf_lucky_seven", "nameKo": "럭키 세븐", "type": "active", "maxLevel": 20, "requiredLevel": 10 },
+        { "id": "thf_double_stab", "nameKo": "더블 스탭", "type": "active", "maxLevel": 20, "requiredLevel": 10 },
+        { "id": "thf_keen_eyes", "nameKo": "킨 아이즈", "type": "passive", "maxLevel": 8, "requiredLevel": 10, "prerequisite": { "skillId": "thf_nimble_body", "minLevel": 3 } }
+      ]
+    },
+    {
+      "tier": 2,
+      "jobNameKo": "어쌔신(2차, 표창)",
+      "skills": [
+        { "id": "as_claw_mastery", "nameKo": "크로우 마스터리", "type": "passive", "maxLevel": 20, "requiredLevel": 30 },
+        { "id": "as_claw_booster", "nameKo": "크로우 부스터", "type": "buff", "maxLevel": 20, "requiredLevel": 30, "prerequisite": { "skillId": "as_claw_mastery", "minLevel": 5 } },
+        { "id": "as_critical_throw", "nameKo": "크리티컬 쓰로우", "type": "passive", "maxLevel": 30, "requiredLevel": 30 },
+        { "id": "as_drain", "nameKo": "드레인", "type": "active", "maxLevel": 20, "requiredLevel": 30 },
+        { "id": "as_haste", "nameKo": "헤이스트", "type": "buff", "maxLevel": 20, "requiredLevel": 30 }
+      ]
+    },
+    {
+      "tier": 3,
+      "jobNameKo": "허밋(3차)",
+      "skills": [
+        { "id": "hm_shadow_partner", "nameKo": "섀도우 파트너", "type": "active", "maxLevel": 20, "requiredLevel": 70 },
+        { "id": "hm_avenger", "nameKo": "어벤져", "type": "active", "maxLevel": 30, "requiredLevel": 70 },
+        { "id": "hm_flash_jump", "nameKo": "플래시 점프", "type": "active", "maxLevel": 20, "requiredLevel": 70 },
+        { "id": "hm_alchemist", "nameKo": "알케미스트", "type": "passive", "maxLevel": 20, "requiredLevel": 70 },
+        { "id": "hm_venom", "nameKo": "베놈", "type": "passive", "maxLevel": 20, "requiredLevel": 70 }
+      ]
+    },
+    {
+      "tier": 4,
+      "jobNameKo": "나이트로드(4차)",
+      "skills": [
+        { "id": "nl_triple_throw", "nameKo": "트리플 스로우", "type": "active", "maxLevel": 30, "requiredLevel": 120 },
+        { "id": "nl_mark_of_nl", "nameKo": "마크 오브 나이트로드", "type": "active", "maxLevel": 30, "requiredLevel": 120 },
+        { "id": "nl_showdown", "nameKo": "쇼다운 챌린지", "type": "active", "maxLevel": 30, "requiredLevel": 120 },
+        { "id": "nl_dark_flare", "nameKo": "다크 플레어", "type": "active", "maxLevel": 30, "requiredLevel": 120 },
+        { "id": "thf_maple_warrior", "nameKo": "메이플 용사", "type": "buff", "maxLevel": 30, "requiredLevel": 120 },
+        { "id": "thf_heros_will", "nameKo": "히어로즈 윌", "type": "active", "maxLevel": 5, "requiredLevel": 120 }
+      ]
+    }
+  ]
+}

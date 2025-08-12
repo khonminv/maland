@@ -140,12 +140,16 @@ export default function PartyListPage() {
       <h1 className="text-3xl font-bold mb-4 text-yellow-400 text-center">파티 모집 목록</h1>
 
       <div className="mb-6 text-center">
-        <Link
-          href="/party/new"
-          className="bg-yellow-400 text-black px-6 py-2 rounded font-semibold hover:bg-yellow-300 transition"
-        >
-          모집글 작성하기
-        </Link>
+        {user ? (
+          <Link
+            href="/party/new"
+            className="bg-yellow-400 text-black px-6 py-2 rounded font-semibold hover:bg-yellow-300 transition"
+          >
+            모집글 작성하기
+          </Link>
+        ) : (
+          <p className="text-sm text-gray-400">로그인 후 모집글을 작성할 수 있습니다.</p>
+        )}
       </div>
 
       <PartyFilter

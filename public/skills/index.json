@@ -1,0 +1,12 @@
+[
+  { "jobId": "hero", "jobNameKo": "히어로" },
+  { "jobId": "paladin", "jobNameKo": "팔라딘" },
+  { "jobId": "darkknight", "jobNameKo": "다크나이트" },
+  { "jobId": "nightlord", "jobNameKo": "나이트로드" },
+  { "jobId": "shadower", "jobNameKo": "섀도어" },
+  { "jobId": "bowmaster", "jobNameKo": "보우마스터" },
+  { "jobId": "bowgod", "jobNameKo": "신궁" },
+  { "jobId": "bishop", "jobNameKo": "비숍" },
+  { "jobId": "firecold", "jobNameKo": "불독" },
+  { "jobId": "thundercold", "jobNameKo": "썬더콜드" }
+]

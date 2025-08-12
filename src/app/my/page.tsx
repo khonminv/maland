@@ -13,6 +13,7 @@ interface Trade {
   status: string;
   price: number;
   createdAt?: string;
+  description: string;
 }
 
 interface Party {
@@ -174,9 +175,40 @@ export default function MyPage() {
               className="bg-gray-700 border border-gray-600 text-white px-2 py-1 rounded"
             >
               <option value="">직업 선택</option>
+              <option value="검사">검사</option>
+              <option value="파이터">파이터</option>
+              <option value="크루세이더">크루세이더</option>
               <option value="히어로">히어로</option>
-              <option value="아크메이지(썬콜)">아크메이지(썬콜)</option>
+              <option value="페이지">페이지</option>
+              <option value="나이트">나이트</option>
+              <option value="팔라딘">팔라딘</option>
+              <option value="스피어맨">스피어맨</option>
+              <option value="용기사">용기사</option>
+              <option value="다크나이트">다크나이트</option>
+              <option value="로그">로그</option>
+              <option value="시프">시프</option>
+              <option value="시프마스터">시프마스터</option>
+              <option value="섀도어">섀도어</option>
+              <option value="어쌔신">어쌔신</option>
+              <option value="허밋">허밋</option>
               <option value="나이트로드">나이트로드</option>
+              <option value="매지션">매지션</option>
+              <option value="클레릭">클레릭</option>
+              <option value="프리스트">프리스트</option>
+              <option value="비숍">비숍</option>
+              <option value="위자드(불,독)">위자드(불,독)</option>
+              <option value="메이지(불,독)">메이지(불,독)</option>
+              <option value="아크메이지(불,독)">아크메이지(불,독)</option>
+              <option value="위자드(썬,콜)">위자드(썬,콜)</option>
+              <option value="메이지(썬,콜)">메이지(썬,콜)</option>
+              <option value="아크메이지(썬,콜)">아크메이지(썬,콜)</option>
+              <option value="아처">아처</option>
+              <option value="헌터">헌터</option>
+              <option value="레인저">레인저</option>
+              <option value="보우마스터">보우마스터</option>
+              <option value="사수">사수</option>
+              <option value="저격수">저격수</option>
+              <option value="신궁">신궁</option>
             </select>
             <input
               type="number"
@@ -196,8 +228,8 @@ export default function MyPage() {
 
         {/* 파티 모집글 */}
         <section className="bg-gray-800 p-4 rounded shadow">
-          <h2 className="text-xl font-bold mb-4">내 파티 모집글</h2>
-          <p>2시간 이후에 자동 마감됩니다.</p>
+          <h2 className="text-xl font-bold mb-2">내 파티 모집글</h2>
+          <p className="mb-2">2시간 이후에 자동 마감됩니다.</p>
           <ul className="space-y-3 max-h-64 overflow-y-auto pr-1">
             {parties.map((party) => (
               <li
@@ -258,7 +290,7 @@ export default function MyPage() {
                 </div>
                 {expandedPartyId === party._id && (
                   <div className="mt-2 text-sm text-gray-300 whitespace-pre-line">
-                    상세 내용: {party.content}
+                    {party.content}
                   </div>
                 )}
               </li>
@@ -269,7 +301,8 @@ export default function MyPage() {
 
         {/* 거래글 */}
         <section className="bg-gray-800 p-4 rounded shadow">
-          <h2 className="text-xl font-bold mb-4">내 자리 거래글</h2>
+          <h2 className="text-xl font-bold mb-2">내 자리 거래글</h2>
+          <p className="mb-2">1일 이후에 자동 취소됩니다.</p>
           <ul className="space-y-3 max-h-64 overflow-y-auto pr-1">
             {trades.map((trade) => (
               <li
@@ -279,7 +312,7 @@ export default function MyPage() {
                 }
                 className={`border p-3 rounded transition-all duration-200 cursor-pointer
                   ${
-                    trade.status === "거래완료"
+                    trade.status === "거래완료" || "거래취소"
                       ? "bg-gray-900 border-gray-600 border-l-4"
                       : "bg-green-900 border-green-600 border-l-4"
                   }
@@ -290,12 +323,25 @@ export default function MyPage() {
                   <div>
                     <div className="font-semibold">{trade.title}</div>
                     <div className="text-sm text-gray-300">
-                      {trade.mapName} - {trade.subMap} -  {trade.price.toLocaleString()}메소 ({trade.status}) 
+                      {trade.mapName} - {trade.subMap} -  {trade.price.toLocaleString()}메소 
+                      <span
+                        className={`px-2 ${
+                          trade.status === "거래완료"
+                            ? "text-green-400 font-semibold"
+                            : trade.status === "거래취소"
+                            ? "text-red-400 font-semibold"
+                            : trade.status === "거래가능"
+                            ? "text-blue-400 font-semibold"
+                            : ""
+                        }`}
+                      >
+                        ({trade.status})
+                      </span>
                     </div>
                   </div>
                   <div className="flex gap-2 items-center">
                     <p className="text-xs">{timeAgo(trade.createdAt!)}</p>
-                    {trade.status !== "거래완료" && (
+                    {trade.status !== "거래완료" && trade.status !== "거래취소" && (
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -306,7 +352,7 @@ export default function MyPage() {
                         거래 완료
                       </button>
                     )}
-                    {trade.status !== "거래완료" && (
+                    {trade.status !== "거래완료" && trade.status !== "거래취소" && (
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -321,7 +367,7 @@ export default function MyPage() {
                 </div>
                 {expandedTradeId === trade._id && (
                   <div className="mt-2 text-sm text-gray-300">
-                    상세 내용: {trade.title} - {trade.mapName} - {trade.subMap}
+                    {trade.description}
                   </div>
                 )}
               </li>

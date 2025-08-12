@@ -185,23 +185,25 @@ export default function TradePage() {
   }, []);
 
   // 필터 적용
-  useEffect(() => {
-    let result = trades;
+useEffect(() => {
+  // ✅ 취소건 제외
+  let result = trades.filter((item) => item.status !== "거래취소");
 
-    if (mapFilter) {
-      result = result.filter((item) => item.mapName === mapFilter);
-    }
+  if (mapFilter) {
+    result = result.filter((item) => item.mapName === mapFilter);
+  }
 
-    if (subMapFilter) {
-      result = result.filter((item) => item.subMap === subMapFilter);
-    }
+  if (subMapFilter) {
+    result = result.filter((item) => item.subMap === subMapFilter);
+  }
 
-    if (!showCompleted) {
-      result = result.filter((item) => item.status !== "거래완료");
-    }
+  if (!showCompleted) {
+    result = result.filter((item) => item.status !== "거래완료");
+  }
 
-    setFiltered(result);
-  }, [mapFilter, subMapFilter, trades, showCompleted]);
+  setFiltered(result);
+}, [mapFilter, subMapFilter, trades, showCompleted]);
+
 
   const toggleStatus = async (id: string, currentStatus?: string) => {
     try {

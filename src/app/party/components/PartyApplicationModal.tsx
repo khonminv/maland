@@ -69,7 +69,7 @@ export default function PartyApplicationModal({ isOpen, onClose, onSubmit, avail
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           className="w-full p-2 bg-gray-800 rounded resize-none mb-4"
-          placeholder="신청 메시지를 입력하세요 (최대 50자)"
+          placeholder="닉네임 및 추가 내용 입력 (최대 50자)"
           rows={3}
         />
 

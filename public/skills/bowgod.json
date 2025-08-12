@@ -1,0 +1,64 @@
+{
+  "jobId": "marksman",
+  "jobNameKo": "신궁",
+  "metadata": {
+    "spRules": {
+      "firstJobLevel": 10,
+      "secondJobLevel": 30,
+      "thirdJobLevel": 70,
+      "fourthJobLevel": 120,
+      "firstJobBonusSP": 1
+    }
+  },
+  "advancements": [
+    {
+      "tier": 1,
+      "jobNameKo": "아처",
+      "skills": [
+        { "id": "arc_critical_shot", "nameKo": "크리티컬 샷", "type": "passive", "maxLevel": 20, "requiredLevel": 10 },
+        { "id": "arc_eye_of_amazon", "nameKo": "더 아이 오브 아마존", "type": "passive", "maxLevel": 8, "requiredLevel": 10 },
+        { "id": "arc_focus", "nameKo": "포커스", "type": "buff", "maxLevel": 20, "requiredLevel": 10 },
+        { "id": "arc_arrow_blow", "nameKo": "애로우 블로우", "type": "active", "maxLevel": 20, "requiredLevel": 10 },
+        { "id": "arc_double_shot", "nameKo": "더블 샷", "type": "active", "maxLevel": 20, "requiredLevel": 10 }
+      ]
+    },
+    {
+      "tier": 2,
+      "jobNameKo": "석궁수",
+      "skills": [
+        { "id": "xbow_mastery", "nameKo": "석궁 마스터리", "type": "passive", "maxLevel": 20, "requiredLevel": 30 },
+        { "id": "xbow_booster", "nameKo": "석궁 부스터", "type": "buff", "maxLevel": 20, "requiredLevel": 30, "prerequisite": { "skillId": "xbow_mastery", "minLevel": 5 } },
+        { "id": "xbow_final_attack", "nameKo": "파이널 어택(석궁)", "type": "passive", "maxLevel": 30, "requiredLevel": 30 },
+        { "id": "soul_arrow_xbow", "nameKo": "소울 애로우(석궁)", "type": "buff", "maxLevel": 20, "requiredLevel": 30 },
+        { "id": "iron_arrow", "nameKo": "아이언 애로우", "type": "active", "maxLevel": 30, "requiredLevel": 30 },
+        { "id": "power_knockback", "nameKo": "파워 넉백", "type": "passive", "maxLevel": 20, "requiredLevel": 30 }
+      ]
+    },
+    {
+      "tier": 3,
+      "jobNameKo": "스나이퍼",
+      "skills": [
+        { "id": "snp_strafe", "nameKo": "스트레이프", "type": "active", "maxLevel": 30, "requiredLevel": 70 },
+        { "id": "snp_ice_shot", "nameKo": "아이스 샷", "type": "active", "maxLevel": 30, "requiredLevel": 70 },
+        { "id": "snp_puppet", "nameKo": "소환의 인형", "type": "active", "maxLevel": 20, "requiredLevel": 70 },
+        { "id": "snp_mortal_blow", "nameKo": "모탈 블로우", "type": "passive", "maxLevel": 20, "requiredLevel": 70 },
+        { "id": "snp_thrust", "nameKo": "스로스트", "type": "passive", "maxLevel": 20, "requiredLevel": 70 },
+        { "id": "snp_golden_eagle", "nameKo": "골든 이글", "type": "active", "maxLevel": 30, "requiredLevel": 70 }
+      ]
+    },
+    {
+      "tier": 4,
+      "jobNameKo": "신궁",
+      "skills": [
+        { "id": "mm_snipe", "nameKo": "스나이핑", "type": "active", "maxLevel": 30, "requiredLevel": 120 },
+        { "id": "mm_piercing_arrow", "nameKo": "피어싱 애로우", "type": "active", "maxLevel": 30, "requiredLevel": 120 },
+        { "id": "mm_sharp_eyes", "nameKo": "샤프 아이즈", "type": "buff", "maxLevel": 30, "requiredLevel": 120 },
+        { "id": "mm_crossbow_expert", "nameKo": "크로스보우 익스퍼트", "type": "passive", "maxLevel": 30, "requiredLevel": 120 },
+        { "id": "mm_blind", "nameKo": "블라인드", "type": "active", "maxLevel": 30, "requiredLevel": 120 },
+        { "id": "mm_frostprey", "nameKo": "프리저", "type": "active", "maxLevel": 30, "requiredLevel": 120 },
+        { "id": "arc_maple_warrior", "nameKo": "메이플 용사", "type": "buff", "maxLevel": 30, "requiredLevel": 120 },
+        { "id": "arc_heros_will", "nameKo": "히어로즈 윌", "type": "active", "maxLevel": 5, "requiredLevel": 120 }
+      ]
+    }
+  ]
+}

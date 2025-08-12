@@ -1,0 +1,65 @@
+{
+  "jobId": "firepoison",
+  "jobNameKo": "아크메이지(불,독)",
+  "metadata": {
+    "spRules": {
+      "firstJobLevel": 8,
+      "secondJobLevel": 30,
+      "thirdJobLevel": 70,
+      "fourthJobLevel": 120,
+      "firstJobBonusSP": 1
+    }
+  },
+  "advancements": [
+    {
+      "tier": 1,
+      "jobNameKo": "마법사",
+      "skills": [
+        { "id": "mag_mp_recovery", "nameKo": "MP 회복력 향상", "type": "passive", "maxLevel": 16, "requiredLevel": 10 },
+        { "id": "mag_improve_maxmp", "nameKo": "MP 증가량 향상", "type": "passive", "maxLevel": 10, "requiredLevel": 10, "prerequisite": { "skillId": "mag_mp_recovery", "minLevel": 5 } },
+        { "id": "mag_magic_guard", "nameKo": "매직 가드", "type": "buff", "maxLevel": 20, "requiredLevel": 10 },
+        { "id": "mag_magic_armor", "nameKo": "매직 아머", "type": "buff", "maxLevel": 20, "requiredLevel": 10, "prerequisite": { "skillId": "mag_magic_guard", "minLevel": 3 } },
+        { "id": "mag_energy_bolt", "nameKo": "에너지 볼트", "type": "active", "maxLevel": 20, "requiredLevel": 10 },
+        { "id": "mag_magic_claw", "nameKo": "매직 클로", "type": "active", "maxLevel": 20, "requiredLevel": 10, "prerequisite": { "skillId": "mag_energy_bolt", "minLevel": 1 } }
+      ]
+    },
+    {
+      "tier": 2,
+      "jobNameKo": "위자드(불,독)",
+      "skills": [
+        { "id": "fp_fire_arrow", "nameKo": "파이어 애로우", "type": "active", "maxLevel": 30, "requiredLevel": 30 },
+        { "id": "fp_poison_breath", "nameKo": "포이즌 브레스", "type": "active", "maxLevel": 30, "requiredLevel": 30 },
+        { "id": "mag_meditation", "nameKo": "메디테이션", "type": "buff", "maxLevel": 20, "requiredLevel": 30 },
+        { "id": "mag_teleport", "nameKo": "텔레포트", "type": "active", "maxLevel": 20, "requiredLevel": 30 },
+        { "id": "mag_slow", "nameKo": "슬로우", "type": "active", "maxLevel": 20, "requiredLevel": 30 },
+        { "id": "mag_mp_eater", "nameKo": "MP 이터", "type": "passive", "maxLevel": 20, "requiredLevel": 30 }
+      ]
+    },
+    {
+      "tier": 3,
+      "jobNameKo": "메이지(불,독)",
+      "skills": [
+        { "id": "fp_explosion", "nameKo": "익스플로젼", "type": "active", "maxLevel": 30, "requiredLevel": 70 },
+        { "id": "fp_poison_mist", "nameKo": "포이즌 미스트", "type": "active", "maxLevel": 30, "requiredLevel": 70 },
+        { "id": "mag_spell_booster", "nameKo": "스펠 부스터", "type": "buff", "maxLevel": 20, "requiredLevel": 70 },
+        { "id": "mag_element_amplification", "nameKo": "엘리멘트 앰플리피케이션", "type": "passive", "maxLevel": 10, "requiredLevel": 70 },
+        { "id": "mag_seal", "nameKo": "실드(봉인)", "type": "active", "maxLevel": 20, "requiredLevel": 70 },
+        { "id": "fp_magic_composition", "nameKo": "매직 컴포지션(불/독)", "type": "active", "maxLevel": 30, "requiredLevel": 70 }
+      ]
+    },
+    {
+      "tier": 4,
+      "jobNameKo": "아크메이지(불,독)",
+      "skills": [
+        { "id": "fp_paralyze", "nameKo": "페럴라이즈", "type": "active", "maxLevel": 30, "requiredLevel": 120 },
+        { "id": "fp_meteor", "nameKo": "메테오", "type": "active", "maxLevel": 30, "requiredLevel": 120 },
+        { "id": "fp_ifrit", "nameKo": "이프리트", "type": "active", "maxLevel": 30, "requiredLevel": 120 },
+        { "id": "fp_flame_haze", "nameKo": "플레임 헤이즈", "type": "active", "maxLevel": 30, "requiredLevel": 120 },
+        { "id": "fp_mist_eruption", "nameKo": "미스트 이럽션", "type": "active", "maxLevel": 30, "requiredLevel": 120 },
+        { "id": "mag_maple_warrior", "nameKo": "메이플 용사", "type": "buff", "maxLevel": 30, "requiredLevel": 120 },
+        { "id": "mag_infinity", "nameKo": "인피니티", "type": "buff", "maxLevel": 30, "requiredLevel": 120 },
+        { "id": "mag_mana_reflection", "nameKo": "마나 리플렉션", "type": "active", "maxLevel": 30, "requiredLevel": 120 }
+      ]
+    }
+  ]
+}

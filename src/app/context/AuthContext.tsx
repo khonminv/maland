@@ -11,6 +11,7 @@ export interface UserProfile {
   token: string;
   job: string;
   level: number;
+  isAdmin?: boolean;
 }
 
 interface AuthContextType {
@@ -35,6 +36,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       localStorage.removeItem("authToken");
     }
     setTokenState(newToken);
+    
   };
 
   const logout = () => {

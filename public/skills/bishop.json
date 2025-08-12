@@ -1,0 +1,54 @@
+{
+ "jobId":"bishop",
+ "jobNameKo":"비숍",
+ "metadata":{"spRules":{"firstJobLevel":8,"secondJobLevel":30,"thirdJobLevel":70,"fourthJobLevel":120,"firstJobBonusSP":1}},
+ "advancements":[
+   {
+     "tier":1,
+     "jobNameKo":"매지션",
+     "skills":[
+       {"id":"mag_mp_boost","nameKo":"MP 증가","type":"passive","maxLevel":20,"requiredLevel":10},
+       {"id":"mag_magic_guard","nameKo":"매직 가드","type":"buff","maxLevel":10,"requiredLevel":10},
+       {"id":"mag_magic_armor","nameKo":"매직 아머","type":"passive","maxLevel":10,"requiredLevel":10},
+       {"id":"mag_energy_bolt","nameKo":"에너지 볼트","type":"active","maxLevel":20,"requiredLevel":10},
+       {"id":"mag_teleport","nameKo":"텔레포트","type":"active","maxLevel":5,"requiredLevel":10}
+     ]
+   },
+   {
+     "tier":2,
+     "jobNameKo":"클레릭",
+     "skills":[
+       {"id":"mag_spell_mastery","nameKo":"스펠 마스터리","type":"passive","maxLevel":10,"requiredLevel":30},
+       {"id":"mag_high_wisdom","nameKo":"하이 위즈덤","type":"passive","maxLevel":5,"requiredLevel":30},
+       {"id":"mag_mp_eater","nameKo":"MP 이터","type":"passive","maxLevel":9,"requiredLevel":30},
+       {"id":"blessed_ensemble","nameKo":"블레싱 앙상블","type":"passive","maxLevel":1,"requiredLevel":30}
+     ]
+   },
+   {
+     "tier":3,
+     "jobNameKo":"프리스트",
+     "skills":[
+       {"id":"bless","nameKo":"블레스","type":"buff","maxLevel":10,"requiredLevel":70},
+       {"id":"heal","nameKo":"힐","type":"active","maxLevel":30,"requiredLevel":70},
+       {"id":"holy_symbol","nameKo":"홀리 심볼","type":"buff","maxLevel":30,"requiredLevel":70},
+       {"id":"holy_fountain","nameKo":"홀리 파운틴","type":"active","maxLevel":30,"requiredLevel":70},
+       {"id":"mystic_door","nameKo":"미스틱 도어","type":"active","maxLevel":30,"requiredLevel":70},
+       {"id":"dispel","nameKo":"디스펠","type":"active","maxLevel":30,"requiredLevel":70}
+     ]
+   },
+   {
+     "tier":4,
+     "jobNameKo":"비숍",
+     "skills":[
+       {"id":"advanced_blessing","nameKo":"어드밴스드 블레싱","type":"buff","maxLevel":20,"requiredLevel":120},
+       {"id":"big_bang","nameKo":"빅뱅","type":"active","maxLevel":30,"requiredLevel":120},
+       {"id":"bahamut","nameKo":"바하무트","type":"active","maxLevel":20,"requiredLevel":120},
+       {"id":"angel_ray","nameKo":"엔젤 레이","type":"active","maxLevel":30,"requiredLevel":120},
+       {"id":"arcane_aim","nameKo":"아케인 에임","type":"passive","maxLevel":30,"requiredLevel":120},
+       {"id":"infinity","nameKo":"인피니티","type":"buff","maxLevel":30,"requiredLevel":120},
+       {"id":"resurrection","nameKo":"리스렉션","type":"active","maxLevel":10,"requiredLevel":120},
+       {"id":"hero_will","nameKo":"히어로즈 윌","type":"active","maxLevel":5,"requiredLevel":120}
+     ]
+   }
+ ]
+}

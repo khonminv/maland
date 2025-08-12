@@ -1,0 +1,61 @@
+{
+  "jobId": "hero",
+  "jobNameKo": "히어로",
+  "metadata": {
+    "spRules": {
+      "firstJobLevel": 10,
+      "secondJobLevel": 30,
+      "thirdJobLevel": 70,
+      "fourthJobLevel": 120,
+      "firstJobBonusSP": 1
+    }
+  },
+  "advancements": [
+    {
+      "tier": 1,
+      "jobNameKo": "전사",
+      "skills": [
+        { "id": "war_hp_recovery", "nameKo": "HP 회복력 향상", "type": "passive", "maxLevel": 16, "requiredLevel": 10 },
+        { "id": "war_improve_maxhp", "nameKo": "최대 HP 증가", "type": "passive", "maxLevel": 10, "requiredLevel": 10, "prerequisite": { "skillId": "war_hp_recovery", "minLevel": 5 } },
+        { "id": "war_iron_body", "nameKo": "아이언 바디", "type": "buff", "maxLevel": 20, "requiredLevel": 10 },
+        { "id": "war_power_strike", "nameKo": "파워 스트라이크", "type": "active", "maxLevel": 20, "requiredLevel": 10 },
+        { "id": "war_slash_blast", "nameKo": "슬래시 블래스트", "type": "active", "maxLevel": 20, "requiredLevel": 10 }
+      ]
+    },
+    {
+      "tier": 2,
+      "jobNameKo": "파이터",
+      "skills": [
+        { "id": "ftr_weapon_mastery", "nameKo": "무기 숙련(검/도끼)", "type": "passive", "maxLevel": 20, "requiredLevel": 30 },
+        { "id": "ftr_final_attack", "nameKo": "파이널 어택", "type": "passive", "maxLevel": 30, "requiredLevel": 30, "prerequisite": { "skillId": "ftr_weapon_mastery", "minLevel": 5 } },
+        { "id": "ftr_weapon_booster", "nameKo": "웨폰 부스터", "type": "buff", "maxLevel": 20, "requiredLevel": 30, "prerequisite": { "skillId": "ftr_weapon_mastery", "minLevel": 5 } },
+        { "id": "ftr_rage", "nameKo": "레이지", "type": "buff", "maxLevel": 20, "requiredLevel": 30 },
+        { "id": "ftr_power_guard", "nameKo": "파워 가드", "type": "buff", "maxLevel": 30, "requiredLevel": 30 }
+      ]
+    },
+    {
+      "tier": 3,
+      "jobNameKo": "크루세이더",
+      "skills": [
+        { "id": "cru_combo", "nameKo": "콤보 어택", "type": "buff", "maxLevel": 20, "requiredLevel": 70 },
+        { "id": "cru_panic", "nameKo": "패닉", "type": "active", "maxLevel": 30, "requiredLevel": 70, "prerequisite": { "skillId": "cru_combo", "minLevel": 1 } },
+        { "id": "cru_coma", "nameKo": "코마", "type": "active", "maxLevel": 30, "requiredLevel": 70, "prerequisite": { "skillId": "cru_combo", "minLevel": 1 } },
+        { "id": "cru_shout", "nameKo": "샤우트", "type": "active", "maxLevel": 30, "requiredLevel": 70 },
+        { "id": "war_armor_crash", "nameKo": "아머 크래시", "type": "active", "maxLevel": 20, "requiredLevel": 70 }
+      ]
+    },
+    {
+      "tier": 4,
+      "jobNameKo": "히어로",
+      "skills": [
+        { "id": "hero_brandish", "nameKo": "브랜디쉬", "type": "active", "maxLevel": 30, "requiredLevel": 120 },
+        { "id": "hero_advanced_combo", "nameKo": "어드밴스드 콤보", "type": "passive", "maxLevel": 30, "requiredLevel": 120, "prerequisite": { "skillId": "cru_combo", "minLevel": 20 } },
+        { "id": "hero_enrage", "nameKo": "인레이지", "type": "buff", "maxLevel": 20, "requiredLevel": 120 },
+        { "id": "war_rush", "nameKo": "러쉬", "type": "active", "maxLevel": 30, "requiredLevel": 120 },
+        { "id": "war_power_stance", "nameKo": "파워 스탠스", "type": "passive", "maxLevel": 30, "requiredLevel": 120 },
+        { "id": "war_maple_warrior", "nameKo": "메이플 용사", "type": "buff", "maxLevel": 30, "requiredLevel": 120 },
+        { "id": "war_heros_will", "nameKo": "히어로즈 윌", "type": "active", "maxLevel": 5, "requiredLevel": 120 }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "jobId": "shadower",
+  "jobNameKo": "섀도어",
+  "metadata": {
+    "spRules": {
+      "firstJobLevel": 10,
+      "secondJobLevel": 30,
+      "thirdJobLevel": 70,
+      "fourthJobLevel": 120,
+      "firstJobBonusSP": 1
+    }
+  },
+  "advancements": [
+    {
+      "tier": 1,
+      "jobNameKo": "로그(도적 1차)",
+      "skills": [
+        { "id": "thf_nimble_body", "nameKo": "님블 바디", "type": "passive", "maxLevel": 20, "requiredLevel": 10 },
+        { "id": "thf_disorder", "nameKo": "디스오더", "type": "active", "maxLevel": 20, "requiredLevel": 10 },
+        { "id": "thf_dark_sight", "nameKo": "다크 사이트", "type": "active", "maxLevel": 20, "requiredLevel": 10, "prerequisite": { "skillId": "thf_disorder", "minLevel": 3 } },
+        { "id": "thf_double_stab", "nameKo": "더블 스탭", "type": "active", "maxLevel": 20, "requiredLevel": 10 },
+        { "id": "thf_lucky_seven", "nameKo": "럭키 세븐", "type": "active", "maxLevel": 20, "requiredLevel": 10 },
+        { "id": "thf_keen_eyes", "nameKo": "킨 아이즈", "type": "passive", "maxLevel": 8, "requiredLevel": 10, "prerequisite": { "skillId": "thf_nimble_body", "minLevel": 3 } }
+      ]
+    },
+    {
+      "tier": 2,
+      "jobNameKo": "시프(2차, 단도)",
+      "skills": [
+        { "id": "bn_dagger_mastery", "nameKo": "대거 마스터리", "type": "passive", "maxLevel": 20, "requiredLevel": 30 },
+        { "id": "bn_dagger_booster", "nameKo": "대거 부스터", "type": "buff", "maxLevel": 20, "requiredLevel": 30, "prerequisite": { "skillId": "bn_dagger_mastery", "minLevel": 5 } },
+        { "id": "bn_savage_blow", "nameKo": "새비지 블로우", "type": "active", "maxLevel": 30, "requiredLevel": 30 },
+        { "id": "bn_steal", "nameKo": "스틸", "type": "active", "maxLevel": 20, "requiredLevel": 30 },
+        { "id": "bn_endure", "nameKo": "엔듀어", "type": "passive", "maxLevel": 20, "requiredLevel": 30 },
+        { "id": "bn_haste", "nameKo": "헤이스트", "type": "buff", "maxLevel": 20, "requiredLevel": 30 }
+      ]
+    },
+    {
+      "tier": 3,
+      "jobNameKo": "시프마스터(3차)",
+      "skills": [
+        { "id": "cb_pickpocket", "nameKo": "픽파켓", "type": "toggle", "maxLevel": 20, "requiredLevel": 70 },
+        { "id": "cb_meso_guard", "nameKo": "메소 가드", "type": "buff", "maxLevel": 20, "requiredLevel": 70 },
+        { "id": "cb_band_of_thieves", "nameKo": "밴드 오브 시브즈", "type": "active", "maxLevel": 30, "requiredLevel": 70 },
+        { "id": "cb_assaulter", "nameKo": "어사울터", "type": "active", "maxLevel": 30, "requiredLevel": 70 },
+        { "id": "cb_meso_explosion", "nameKo": "메소 익스플로전", "type": "active", "maxLevel": 30, "requiredLevel": 70, "prerequisite": { "skillId": "cb_pickpocket", "minLevel": 1 } },
+        { "id": "cb_venom", "nameKo": "베놈", "type": "passive", "maxLevel": 20, "requiredLevel": 70 },
+        { "id": "cb_shield_mastery", "nameKo": "실드 마스터리", "type": "passive", "maxLevel": 20, "requiredLevel": 70 },
+        { "id": "cb_chakra", "nameKo": "차크라", "type": "active", "maxLevel": 20, "requiredLevel": 70 }
+      ]
+    },
+    {
+      "tier": 4,
+      "jobNameKo": "섀도어(4차)",
+      "skills": [
+        { "id": "sh_boomerang_step", "nameKo": "부메랑 스텝", "type": "active", "maxLevel": 30, "requiredLevel": 120 },
+        { "id": "sh_assassinate", "nameKo": "암살", "type": "active", "maxLevel": 30, "requiredLevel": 120 },
+        { "id": "sh_smokescreen", "nameKo": "연막탄", "type": "active", "maxLevel": 30, "requiredLevel": 120 },
+        { "id": "sh_fake", "nameKo": "페이크", "type": "passive", "maxLevel": 30, "requiredLevel": 120 },
+        { "id": "thf_maple_warrior", "nameKo": "메이플 용사", "type": "buff", "maxLevel": 30, "requiredLevel": 120 },
+        { "id": "thf_heros_will", "nameKo": "히어로즈 윌", "type": "active", "maxLevel": 5, "requiredLevel": 120 }
+      ]
+    }
+  ]
+}

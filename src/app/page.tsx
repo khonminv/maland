@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FiActivity, FiMapPin, FiUsers } from "react-icons/fi";
+import LatestNotice from "@/components/LatestNotice";
 
 export default function HomePage() {
   const router = useRouter();
@@ -26,13 +27,12 @@ export default function HomePage() {
     <div className="bg-transparent text-white min-h-screen px-10 py-12">
       <div className="max-w-7xl mx-auto">
         {/* 제목 + 설명 */}
-        <div className="mb-12">
-          <h1 className="text-4xl font-bold text-yellow-400 mb-2">
+        <div className="mb-12 flex gap-6 items-baseline">
+          <h1 className="text-4xl font-bold text-yellow-400 mb-2 whitespace-nowrap">
             메이플랜드 올인원
           </h1>
-          <p className="text-gray-300 text-base">
-            
-          </p>
+          <LatestNotice />
+          <Link href="/notice" className="whitespace-nowrap underline">공지사항</Link>
         </div>
 
         {/* 기능 카드 리스트 */}
