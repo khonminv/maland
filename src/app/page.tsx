@@ -4,7 +4,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { FiActivity, FiMapPin, FiUsers } from "react-icons/fi";
+import { FiActivity, FiMapPin, FiUsers, FiClock } from "react-icons/fi";
 import LatestNotice from "@/components/LatestNotice";
 
 export default function HomePage() {
@@ -76,7 +76,7 @@ export default function HomePage() {
             title="사냥 타이머"
             desc="시간당 획득 경험치 및 메소 확인."
             href="/timer"
-            icon={<FiActivity size={28} />}
+            icon={<FiClock size={28} />}
           />
         </div>
       </div>
