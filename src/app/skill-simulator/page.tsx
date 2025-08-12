@@ -313,7 +313,7 @@ export default function SkillSimulator() {
 
   function master(skill: Skill, tier: 1 | 2 | 3 | 4) {
     setAlloc(prev => {
-      let next = { ...prev } as Record<string, number>;
+      const next = { ...prev } as Record<string, number>;
       let guard = 0;
       while (guard++ < 1000) {
         const used: Record<1 | 2 | 3 | 4, number> = { 1: 0, 2: 0, 3: 0, 4: 0 };

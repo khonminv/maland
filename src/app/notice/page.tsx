@@ -1,8 +1,8 @@
-// app/notice/page.tsx  (= NoticeBoard 페이지 컴포넌트)
+// app/notice/page.tsx
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useAuth } from "@/app/context/AuthContext";
 import { useRouter } from "next/navigation";
 
@@ -14,6 +14,18 @@ export interface NoticeItem {
   title: string;
   content: string;
   severity?: NoticeSeverity;
+  pinned?: boolean;
+  createdAt?: string | number | Date;
+  linkHref?: string;
+}
+
+// 백엔드 응답 원형(느슨한 형태)
+interface NoticeApiResponse {
+  _id?: string;
+  id?: string;
+  title?: string;
+  content?: string;
+  severity?: string;
   pinned?: boolean;
   createdAt?: string | number | Date;
   linkHref?: string;
@@ -45,9 +57,15 @@ export default function NoticeBoardPage() {
       try {
         setLoading(true);
         setLoadError(null);
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE}/notice`);
-        const arr = Array.isArray(res.data) ? res.data : [];
-        const mapped: NoticeItem[] = arr.map((n: any) => {
+
+        const res = await axios.get<NoticeApiResponse[] | unknown>(
+          `${process.env.NEXT_PUBLIC_API_BASE}/notice`
+        );
+
+        const raw = res.data;
+        const arr: NoticeApiResponse[] = Array.isArray(raw) ? raw : [];
+
+        const mapped: NoticeItem[] = arr.map((n) => {
           const rawSev = typeof n.severity === "string" ? n.severity.toLowerCase() : "info";
           const normalized: NoticeSeverity =
             rawSev === "critical"
@@ -55,6 +73,7 @@ export default function NoticeBoardPage() {
               : (["info", "success", "warning", "error"].includes(rawSev)
                   ? (rawSev as NoticeSeverity)
                   : "info");
+
           return {
             id: String(n._id ?? n.id ?? Math.random().toString(36).slice(2)),
             title: String(n.title ?? ""),
@@ -65,9 +84,16 @@ export default function NoticeBoardPage() {
             linkHref: n.linkHref ?? undefined,
           };
         });
+
         if (alive) setNotices(mapped);
-      } catch (err: any) {
-        if (alive) setLoadError(err?.message || "공지사항 불러오기 실패");
+      } catch (err: unknown) {
+        if (!alive) return;
+        const ax = err as AxiosError<{ message?: string; error?: string } | NoticeApiResponse[]>;
+        const msg =
+          (ax.response && (ax.response.data as any)?.message) ||
+          (ax.response && (ax.response.data as any)?.error) ||
+          (ax.message ?? "공지사항 불러오기 실패");
+        setLoadError(msg);
       } finally {
         if (alive) setLoading(false);
       }
