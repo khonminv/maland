@@ -71,7 +71,6 @@ function initials(name: string) {
   return pick || "SK";
 }
 function iconSrc(jobId: string, skillId: string) {
-  // 아이콘이 있으면 /public/skills/icons/<jobId>/<skillId>.png 으로 넣어주세요.
   return `/skills/icons/${jobId}/${skillId}.png`;
 }
 
@@ -151,7 +150,6 @@ const SkillCard: React.FC<RowProps> = ({ s, tier, curr, canPlus, canMinus, onPlu
         <div className="flex items-center gap-2">
           <span className={`inline-block rounded border px-1.5 py-0.5 text-[10px] ${typeChip[s.type]} tracking-wide`}>{s.type.toUpperCase()}</span>
           <div className="font-semibold truncate">{s.nameKo}</div>
-          {/* 제약 뱃지들 */}
           {s.requiredLevel && <span className="text-[10px] px-1.5 py-0.5 rounded bg-neutral-800 border border-neutral-600 text-neutral-300">요구 Lv {s.requiredLevel}</span>}
           {s.prerequisite && lockedBadge(`선행 ${s.prerequisite.minLevel}↑`)}
         </div>
@@ -213,8 +211,9 @@ export default function SkillSimulator() {
         const savedLevel = localStorage.getItem("ml-sim-level");
         if (savedAlloc) setAlloc(JSON.parse(savedAlloc));
         if (savedLevel) setLevel(parseInt(savedLevel, 10));
-      } catch (e: any) {
-        setError(e.message || "데이터 로드 오류");
+      } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : "데이터 로드 오류";
+        setError(msg);
       } finally {
         setLoading(false);
       }
@@ -232,8 +231,9 @@ export default function SkillSimulator() {
         setJobLine(data);
         setAlloc({});
         localStorage.setItem("ml-sim-job", selectedJobId);
-      } catch (e: any) {
-        setError(e.message || "데이터 로드 오류");
+      } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : "데이터 로드 오류";
+        setError(msg);
       } finally {
         setLoading(false);
       }
@@ -292,16 +292,25 @@ export default function SkillSimulator() {
     }
     return { ok: true } as const;
   }
-  function inc(skill: Skill, tier: 1 | 2 | 3 | 4) {
+
+  function inc(skill: Skill, tier: 1 | 2 | 3 | 4): void {
     const check = canIncrease(skill, tier);
-    if (!check.ok) return setMessage(check.reason || ""), undefined as any;
+    if (!check.ok) {
+      setMessage(check.reason || "");
+      return;
+    }
     setAlloc(prev => ({ ...prev, [skill.id]: (prev[skill.id] || 0) + 1 }));
   }
-  function dec(skill: Skill) {
+
+  function dec(skill: Skill): void {
     const check = canDecrease(skill);
-    if (!check.ok) return setMessage(check.reason || ""), undefined as any;
+    if (!check.ok) {
+      setMessage(check.reason || "");
+      return;
+    }
     setAlloc(prev => ({ ...prev, [skill.id]: Math.max(0, (prev[skill.id] || 0) - 1) }));
   }
+
   function master(skill: Skill, tier: 1 | 2 | 3 | 4) {
     setAlloc(prev => {
       let next = { ...prev } as Record<string, number>;
@@ -328,6 +337,7 @@ export default function SkillSimulator() {
       return next;
     });
   }
+
   function resetTier(tier: 1 | 2 | 3 | 4) {
     setAlloc(prev => {
       const next = { ...prev };
@@ -345,11 +355,7 @@ export default function SkillSimulator() {
   return (
     <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-neutral-900 via-neutral-950 to-black text-neutral-100">
       <div className="mx-auto max-w-6xl p-4 md:p-8 space-y-6">
-        {/* 상단 패널 */}
-        <MaplePanel
-          title="메이플랜드 스킬 시뮬레이터"
-          subtitle={`${jobLine.jobNameKo} · Lv.${level}`}
-        >
+        <MaplePanel title="메이플랜드 스킬 시뮬레이터" subtitle={`${jobLine.jobNameKo} · Lv.${level}`}>
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-3">
               <select
@@ -410,7 +416,6 @@ export default function SkillSimulator() {
             </div>
           </div>
 
-          {/* 스킬 그리드: 메이플식 2열/3열 카드 */}
           <div className="grid gap-2 sm:grid-cols-2">
             {activeAdv?.skills?.map((s) => {
               const curr = alloc[s.id] || 0;
@@ -434,7 +439,6 @@ export default function SkillSimulator() {
           </div>
         </div>
 
-        {/* 토스트 */}
         {message && (
           <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
             <div className="rounded-xl border border-yellow-400/40 bg-yellow-500/15 px-4 py-2 text-sm text-yellow-200 shadow-xl">

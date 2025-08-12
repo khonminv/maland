@@ -2,7 +2,18 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-type Notice = { id: string; title: string; createdAt?: string | number | Date };
+interface NoticeApiResponse {
+  _id?: string;
+  id?: string;
+  title?: string;
+  createdAt?: string | number | Date;
+}
+
+interface Notice {
+  id: string;
+  title: string;
+  createdAt?: string | number | Date;
+}
 
 export default function LatestNoticeSimple() {
   const [latest, setLatest] = useState<Notice | null>(null);
@@ -23,19 +34,21 @@ export default function LatestNoticeSimple() {
           console.warn("공지 API 응답 오류:", res.status, await res.text());
           return;
         }
-        const data = await res.json();
+
+        const data: unknown = await res.json();
+
         if (!Array.isArray(data)) {
           console.warn("공지 데이터가 배열이 아닙니다:", data);
           return;
         }
 
-        const mapped = data
-          .map((n: any) => ({
-            id: String(n?._id ?? n?.id ?? ""),
-            title: String(n?.title ?? ""),
-            createdAt: n?.createdAt,
+        const mapped: Notice[] = (data as NoticeApiResponse[])
+          .map((n) => ({
+            id: String(n._id ?? n.id ?? ""),
+            title: String(n.title ?? ""),
+            createdAt: n.createdAt,
           }))
-          .filter((n) => n.id && n.title);
+          .filter((n) => n.id.length > 0 && n.title.length > 0);
 
         if (mapped.length === 0) return;
 
@@ -47,7 +60,7 @@ export default function LatestNoticeSimple() {
 
         setLatest(mapped[0]);
       } catch (e) {
-        if ((e as any).name !== "AbortError") {
+        if (!(e instanceof DOMException && e.name === "AbortError")) {
           console.warn("공지 불러오기 실패:", e);
         }
       }

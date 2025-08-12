@@ -3,9 +3,21 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 type NoticeSeverity = "info" | "success" | "warning" | "error";
+
+interface MyResponse {
+  user?: {
+    isAdmin?: boolean;
+  };
+}
+
+interface NoticeCreateResponse {
+  success: boolean;
+  message?: string;
+  error?: string;
+}
 
 export default function NoticeCreatePage() {
   const router = useRouter();
@@ -19,7 +31,7 @@ export default function NoticeCreatePage() {
   const [pinned, setPinned] = useState(false);
   const [linkHref, setLinkHref] = useState("");
 
-  // 접속자 권한 확인 (백엔드 /my 가 isAdmin 내려주도록 구현되어 있음)
+  // 접속자 권한 확인
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     if (!token) {
@@ -27,11 +39,11 @@ export default function NoticeCreatePage() {
       return;
     }
     axios
-      .get(`${process.env.NEXT_PUBLIC_API_BASE}/my`, {
+      .get<MyResponse>(`${process.env.NEXT_PUBLIC_API_BASE}/my`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
-        setIsAdmin(!!res.data?.user?.isAdmin);
+        setIsAdmin(Boolean(res.data.user?.isAdmin));
       })
       .catch(() => setIsAdmin(false));
   }, []);
@@ -51,25 +63,25 @@ export default function NoticeCreatePage() {
 
     try {
       setLoading(true);
-      await axios.post(
+      await axios.post<NoticeCreateResponse>(
         `${process.env.NEXT_PUBLIC_API_BASE}/notice`,
         {
           title: title.trim(),
           content: content.trim(),
           severity,
           pinned,
-          // 백엔드 스키마에 linkHref 없으면 제거해도 OK
           ...(linkHref.trim() ? { linkHref: linkHref.trim() } : {}),
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       alert("공지사항이 등록되었습니다.");
       router.replace("/notice");
-    } catch (err: any) {
+    } catch (err) {
+      const error = err as AxiosError<NoticeCreateResponse>;
       const msg =
-        err?.response?.data?.message ||
-        err?.response?.data?.error ||
-        err?.message ||
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.message ||
         "등록 실패";
       alert(msg);
     } finally {
@@ -132,7 +144,9 @@ export default function NoticeCreatePage() {
             <label className="block text-sm font-medium mb-1">중요도</label>
             <select
               value={severity}
-              onChange={(e) => setSeverity(e.currentTarget.value as NoticeSeverity)}
+              onChange={(e) =>
+                setSeverity(e.currentTarget.value as NoticeSeverity)
+              }
               className="w-full px-3 py-2 rounded-lg bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 focus:outline-none focus:ring-2 focus:ring-indigo-400"
             >
               <option value="info">안내</option>
