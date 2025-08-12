@@ -110,7 +110,7 @@ export default function NoticeCreatePage() {
   }
 
   return (
-    <main className="max-w-3xl mx-auto px-6 py-10">
+    <main className="max-w-3xl mx-auto px-6 py-10 text-black">
       <h1 className="text-2xl font-bold mb-6">공지 작성</h1>
 
       <form

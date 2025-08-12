@@ -72,7 +72,7 @@ export default async function NoticeDetailPage(
   const sevClass = sevMap[sev] || sevMap["info"];
 
   return (
-    <main className="max-w-3xl mx-auto px-6 py-10">
+    <main className="max-w-3xl max-w-full px-6 py-10">
       <div className={`rounded-2xl border shadow-sm p-5 ${sevClass}`}>
         <div className="flex items-center gap-2 mb-2">
           {data.pinned && (
