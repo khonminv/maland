@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect,useState,useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import PartyApplicationModal from "../components/PartyApplicationModal";
@@ -40,14 +40,13 @@ export default function PartyDetailClient({ data }: { data: PartyDetail }) {
   const API = process.env.NEXT_PUBLIC_API_BASE!;
   const isLoggedIn = !!(token && user?.discordId);
 
-  // ✅ 현재 유저가 이미 신청했는지 계산
+  // 이미 신청했는지 계산
   const initiallyApplied = useMemo(() => {
     const me = String(user?.discordId || "").trim();
     if (!me) return false;
-    return !!data.applicants?.some(a => String(a.discordId).trim() === me);
+    return !!data.applicants?.some((a) => String(a.discordId).trim() === me);
   }, [data.applicants, user?.discordId]);
 
-  // ✅ 버튼 상태로 쓸 로컬 스테이트
   const [applied, setApplied] = useState(initiallyApplied);
   useEffect(() => setApplied(initiallyApplied), [initiallyApplied]);
 
@@ -72,15 +71,21 @@ export default function PartyDetailClient({ data }: { data: PartyDetail }) {
       );
       alert("신청 완료되었습니다!");
       setOpen(false);
-      setApplied(true); // ✅ 즉시 버튼 상태 갱신
-    } catch (err: any) {
-      const msg =
-        err?.response?.data?.message ||
-        (err?.response?.status === 404
-          ? "마감되었거나 존재하지 않는 파티입니다."
-          : "신청 중 오류가 발생했습니다.");
-      alert(msg);
-      if (err?.response?.status === 404) router.replace("/party");
+      setApplied(true);
+    } catch (err: unknown) {
+      // ✅ any 제거: 안전하게 에러 타입 좁히기
+      if (axios.isAxiosError(err)) {
+        const status = err.response?.status;
+        const msg =
+          (err.response?.data as { message?: string } | undefined)?.message ??
+          "신청 중 오류가 발생했습니다.";
+        alert(status === 404 ? "마감되었거나 존재하지 않는 파티입니다." : msg);
+        if (status === 404) router.replace("/party");
+      } else if (err instanceof Error) {
+        alert(err.message);
+      } else {
+        alert("알 수 없는 오류가 발생했습니다.");
+      }
     }
   };
 
@@ -100,7 +105,6 @@ export default function PartyDetailClient({ data }: { data: PartyDetail }) {
 
           {/* 상세 카드 */}
           <article className="rounded-2xl bg-gray-800/80 ring-1 ring-white/10 shadow-xl p-6">
-            {/* 메타 */}
             <div className="flex flex-wrap items-center gap-2 text-sm text-gray-300">
               맵:
               <span className="inline-flex items-center rounded-full bg-gray-700 px-3 py-1 font-medium">
@@ -112,12 +116,8 @@ export default function PartyDetailClient({ data }: { data: PartyDetail }) {
               <span className="ml-auto text-xs text-gray-400">{timeAgo(data.createdAt)}</span>
             </div>
 
-            {/* 제목 */}
-            <h1 className="mt-3 text-2xl md:text-3xl font-bold tracking-tight">
-              {data.title}
-            </h1>
+            <h1 className="mt-3 text-2xl md:text-3xl font-bold tracking-tight">{data.title}</h1>
 
-            {/* 포지션 배지 */}
             <div className="mt-4 flex flex-wrap gap-2">
               자리:
               {data.positions?.length ? (
@@ -134,30 +134,28 @@ export default function PartyDetailClient({ data }: { data: PartyDetail }) {
               )}
             </div>
 
-            {/* 본문 */}
             <div className="mt-6 border-t border-white/10 pt-6">
-              <div className="whitespace-pre-wrap leading-relaxed text-gray-100">
-                {data.content}
-              </div>
+              <div className="whitespace-pre-wrap leading-relaxed text-gray-100">{data.content}</div>
             </div>
 
-            {/* 액션 */}
             <div className="mt-8 flex flex-col sm:flex-row gap-3">
               <button
                 type="button"
                 onClick={() => {
                   if (applied) return;
                   if (!isLoggedIn) {
-                    alert("로그인이 필요합니다."); // ✅ 로그인 없음 → 알럿 후 종료
+                    alert("로그인이 필요합니다.");
                     return;
                   }
-                  setOpen(true); // 로그인 되어 있으면 모달 오픈
+                  setOpen(true);
                 }}
                 disabled={applied}
                 className={`inline-flex justify-center items-center gap-2 rounded-xl px-5 py-2.5 font-semibold shadow-sm
-                  ${applied
-                    ? "bg-gray-600 text-gray-300 cursor-not-allowed"
-                    : "bg-yellow-400 text-black hover:bg-yellow-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-300"}`}
+                  ${
+                    applied
+                      ? "bg-gray-600 text-gray-300 cursor-not-allowed"
+                      : "bg-yellow-400 text-black hover:bg-yellow-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-300"
+                  }`}
               >
                 {applied ? "신청 완료" : "신청하기"}
               </button>
@@ -172,7 +170,6 @@ export default function PartyDetailClient({ data }: { data: PartyDetail }) {
         </div>
       </main>
 
-      {/* 모달 */}
       <PartyApplicationModal
         isOpen={open}
         onClose={() => setOpen(false)}
