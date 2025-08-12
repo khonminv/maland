@@ -90,9 +90,12 @@ export default function NoticeBoardPage() {
         if (!alive) return;
         const ax = err as AxiosError<{ message?: string; error?: string } | NoticeApiResponse[]>;
         const msg =
-          (ax.response && (ax.response.data as any)?.message) ||
-          (ax.response && (ax.response.data as any)?.error) ||
-          (ax.message ?? "공지사항 불러오기 실패");
+          (Array.isArray(ax.response?.data)
+            ? undefined
+            : ax.response?.data?.message || ax.response?.data?.error) ||
+          ax.message ||
+          "공지사항 불러오기 실패";
+
         setLoadError(msg);
       } finally {
         if (alive) setLoading(false);
