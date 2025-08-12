@@ -47,9 +47,13 @@ async function getNotice(id: string): Promise<NoticeDTO | null> {
   return res.json();
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+// ✅ params는 Promise로 받고 await 해서 꺼내기
+export async function generateMetadata(
+  { params }: { params: Promise<{ id: string }> }
+): Promise<Metadata> {
   try {
-    const data = await getNotice(params.id);
+    const { id } = await params;
+    const data = await getNotice(id);
     if (!data) return { title: "공지 없음" };
     return { title: `공지: ${data.title}` };
   } catch {
@@ -57,8 +61,11 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   }
 }
 
-export default async function NoticeDetailPage({ params }: { params: { id: string } }) {
-  const data = await getNotice(params.id);
+export default async function NoticeDetailPage(
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  const data = await getNotice(id);
   if (!data) notFound();
 
   const sev = (data.severity || "info").toLowerCase();
