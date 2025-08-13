@@ -6,8 +6,32 @@ import Nav from "@/components/ui/Nav";
 import { AuthProvider } from "./context/AuthContext";
 
 export const metadata: Metadata = {
-  title: "메이플랜드 올인원",
-  description: "스킬트리, 자리 거래, 파티 모집을 한 곳에서!",
+  metadataBase: new URL("https://www.maland-all.co.kr/"),
+  title: {
+    default: "메랜올",
+    template: "%s | 메랜올",
+  },
+  description: "스킬트리, 자리 거래, 파티 모집 MapleLand All",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true },
+  },
+  openGraph: {
+    type: "website",
+    url: "https://www.maland-all.co.kr/",
+    siteName: "메랜올",
+    title: "메랜올",
+    description: "스킬트리, 자리 거래, 파티 모집",
+    locale: "ko_KR",
+    images: [{ url: "/og.jpg", width: 1200, height: 630, alt: "메랜올" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "메랜올",
+    description: "스킬트리, 자리 거래, 파티 모집",
+    images: ["/og.jpg"],
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

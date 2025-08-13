@@ -27,7 +27,6 @@ export default function HomePage() {
   return (
     <div className="bg-transparent text-white min-h-screen px-6 sm:px-8 lg:px-12 py-10 sm:py-12">
       <div className="max-w-7xl mx-auto">
-        {/* 제목 + 공지 영역: 모바일=세로, 데스크톱=가로 */}
         {/* 제목 + 공지 영역: 모바일=세로, 데스크톱=가로 정렬 */}
 <div className="mb-10 sm:mb-12">
   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-6">

@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import HuntTimerCore from "@/components/HuntTimerCore";
 
 export default function HuntTimerMiniPage() {
-  // 팝업 크기/위치 보정 (가능한 브라우저 한정)
   useEffect(() => {
     if (window.opener && "resizeTo" in window) {
       const w = 360, h = 320;
@@ -19,5 +18,5 @@ export default function HuntTimerMiniPage() {
     }
   }, []);
 
-  return <HuntTimerCore isMini />; // 코어에서 미니 UI만 표시되도록
+  return <HuntTimerCore isMini />;
 }

@@ -136,7 +136,7 @@ export default function PartyListPage() {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-4 text-yellow-400 text-center">파티 모집 목록</h1>
+      <h1 className="text-3xl font-bold mb-4 text-yellow-400 text-center">파티 모집</h1>
 
       <div className="mb-6 text-center">
         {user ? (
