@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://www.maland-all.co.kr
+
+# Sitemaps
+Sitemap: https://www.maland-all.co.kr/sitemap.xml
