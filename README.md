@@ -1,4 +1,4 @@
-### 🍞고운세상
+### 🍞메랜 올
 메이플랜드 유저를 위한 개인 프로젝트 웹앱입니다. 스킬트리 시뮬레이터, 자리 거래 게시판, 파티 모집/신청 기능을 구현하였으며
 Next.js + TypeScript 기반으로 제작했고, Discord 로그인 연동으로 원만한 모집 환경을 제공합니다. 필터·검색, 평균 시세, 마이페이지 관리 등 실제 사용 흐름에 맞춘 UI/UX를 구현했습니다.
 
@@ -19,7 +19,7 @@ Next.js + TypeScript 기반으로 제작했고, Discord 로그인 연동으로 �
 ### ⚡View 
 | 메인 | 자리거래 | 파티모집 |
 | :-: | :-: | :-: |
-| <img src="public/images/maland.PNG" width="200px" height="200px" align="top"> | <img src="public/images/maland2.PNG" width="200px" height="200px" align="top"> | <img src="public/images/maland3.PNG" width="200px" height="200px" align="top"> |
+| <img src="public/images/maland.png" width="200px" height="200px" align="top"> | <img src="public/images/maland2.png" width="200px" height="200px" align="top"> | <img src="public/images/maland3.png" width="200px" height="200px" align="top"> |
 
 ## 📣Focus
 * Next.js + TypeScript: CSR/ISR 조합으로 빠른 반응성, 타입 안정성 확보
