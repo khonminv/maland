@@ -353,7 +353,7 @@ export default function SkillSimulator() {
   if (error) return <div className="min-h-screen grid place-items-center text-red-200">{error}</div>;
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-neutral-900 via-neutral-950 to-black text-neutral-100">
+    <div className="min-h-screen bg-transparent from-neutral-900 via-neutral-950 to-black text-neutral-100">
       <div className="mx-auto max-w-6xl p-4 md:p-8 space-y-6">
         <MaplePanel title="메이플랜드 스킬 시뮬레이터" subtitle={`${jobLine.jobNameKo} · Lv.${level}`}>
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">

@@ -37,6 +37,8 @@ interface AvgPrice {
     subMap: string;
   };
   avgPrice: number;
+  minPrice: number;
+  maxPrice: number;
   count: number;
 }
 interface SubMap {
@@ -381,14 +383,16 @@ useEffect(() => {
             <p className="text-gray-400 text-center">평균 거래가 정보가 없습니다.</p>
           ) : (
             <ul className="divide-y divide-gray-200">
-              {filteredAvgPrices.map(({ _id, avgPrice, count }) => (
+              {filteredAvgPrices.map(({ _id, avgPrice, count, maxPrice, minPrice }) => (
                 <li
                   key={`${_id.mapName}-${_id.subMap}`}
-                  className="py-3 flex justify-between items-center text-sm font-medium"
+                  className="text-center py-3 grid grid-cols-1 sm:grid-cols-5 gap-1 sm:gap-3 items-center text-sm font-medium"
                 >
                   <span className="text-purple-700">{_id.subMap}</span>
+                  <span className="text-purple-700">최소: {minPrice.toLocaleString()} 메소</span>
+                  <span className="text-purple-700">최대: {maxPrice.toLocaleString()} 메소</span>
                   <span className="text-indigo-600 font-bold">
-                    {Math.round(avgPrice).toLocaleString()} 메소
+                    평균 {Math.round(avgPrice).toLocaleString()} 메소
                   </span>
                   <span className="text-gray-400">({count}건)</span>
                 </li>

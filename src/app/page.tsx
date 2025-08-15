@@ -4,7 +4,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { FiActivity, FiMapPin, FiUsers, FiClock } from "react-icons/fi";
+import { FiActivity, FiMapPin, FiUsers, FiClock, FiStar } from "react-icons/fi";
 import LatestNotice from "@/components/LatestNotice";
 
 export default function HomePage() {
@@ -76,6 +76,12 @@ export default function HomePage() {
             desc="시간당 획득 경험치 및 메소 확인."
             href="/timer"
             icon={<FiClock size={28} />}
+          />
+          <FeatureCard
+            title="주문서 시뮬레이터"
+            desc="주문서 강화 제물로 사용."
+            href="/enhance"
+            icon={<FiStar size={28} />}
           />
         </div>
       </div>

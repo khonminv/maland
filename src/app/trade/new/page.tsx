@@ -15,6 +15,8 @@ interface AvgPrice {
     subMap: string;
   };
   avgPrice: number;
+  minPrice: number;
+  maxPrice: number;
   count: number;
 }
 
@@ -210,11 +212,16 @@ export default function NewTradePage() {
           }
           return (
             <p className="text-sm text-black">
-              <strong>{form.subMap}</strong> - 평균 가격:{" "}
-              <span className="text-blue-600 font-bold">
-                {Math.round(selectedAvg.avgPrice).toLocaleString()} 메소
-              </span>{" "}
-              ({selectedAvg.count}건)
+              <strong>{form.subMap} ({selectedAvg.count}건)</strong>
+              <span className="block text-blue-600 font-bold">
+                평균 가격: {Math.round(selectedAvg.avgPrice).toLocaleString()} 메소
+              </span>
+              <span className="block text-red-300 font-bold">
+                최소 가격: {Math.round(selectedAvg.minPrice).toLocaleString()} 메소
+              </span>
+              <span className="block text-green-500 font-bold">
+                최대 가격: {Math.round(selectedAvg.maxPrice).toLocaleString()} 메소
+              </span>
             </p>
           );
         })()}

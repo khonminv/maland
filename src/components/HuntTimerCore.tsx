@@ -170,12 +170,11 @@ export default function HuntTimerCore({ isMini = false }: { isMini?: boolean }) 
       : `경과: ${Math.max(0, (cfgTotalMs - downLeftMsLive) / 60000).toFixed(2)}분 / 설정: ${fmtHMS(cfgTotalMs)}`;
 
   return (
-    <main className={`min-h-screen bg-gray-900 text-white ${isMini ? "p-3" : ""}`}>
+    <main className={`min-h-screen bg-transparent text-white ${isMini ? "p-3" : ""}`}>
       <div className={`${isMini ? "max-w-xs mx-auto" : "max-w-xl mx-auto px-5 py-8"}`}>
         {/* 헤더 (미니는 간소화) */}
         {!isMini ? (
           <div className="mb-4 flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-yellow-400">사냥 타이머 · 10분 평균 계산기</h1>
             {/* 미니창은 외부에서 여니 여기선 버튼 X */}
           </div>
         ) : (
